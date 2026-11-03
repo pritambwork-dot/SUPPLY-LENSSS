@@ -1,0 +1,31 @@
+name: Vercel Production CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Next.js Production App
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://supplylenss.vercel.app
+          NEXT_PUBLIC_DEMO_MODE: "true"
+        run: npm run build

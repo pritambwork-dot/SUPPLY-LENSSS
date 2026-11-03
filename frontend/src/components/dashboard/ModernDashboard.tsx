@@ -43,6 +43,7 @@ interface ModernDashboardProps {
   onOpenSupplierModal: (supplier: Supplier) => void;
   onNavigateTab: (tab: string) => void;
   onOpenLoginModal: () => void;
+  onOpenProfileModal?: () => void;
   user: { name: string; handle: string; role: string } | null;
   onPerformLiveSearch?: (query: string) => void;
   isExpanded?: boolean;
@@ -56,6 +57,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   onOpenSupplierModal,
   onNavigateTab,
   onOpenLoginModal,
+  onOpenProfileModal,
   user,
   onPerformLiveSearch,
   isExpanded = false,
@@ -421,7 +423,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
 
           {/* User Profile Pill */}
           <button
-            onClick={onOpenLoginModal}
+            onClick={onOpenProfileModal || onOpenLoginModal}
             className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
           >
             <div className="w-7 h-7 rounded-full bg-blue-600 p-0.5 shadow-xs flex items-center justify-center text-white text-xs font-bold">

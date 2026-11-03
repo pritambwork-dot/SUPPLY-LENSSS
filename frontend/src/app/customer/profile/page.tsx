@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2,
@@ -15,10 +16,19 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
+  User,
+  LogOut,
+  Lock,
+  Phone,
+  Briefcase
 } from "lucide-react";
 import { api } from "@/services/api";
+import { authService, AuthUser } from "@/lib/auth";
 
 export default function CustomerBusinessProfilePage() {
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [formData, setFormData] = useState({
     business_name: "EcoPack Solutions",
     business_idea: "Eco-friendly sugarcane bagasse food containers and biodegradable meal trays for fast-casual restaurants.",
@@ -41,9 +51,19 @@ export default function CustomerBusinessProfilePage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadProfile() {
+    async function loadData() {
       setIsLoading(true);
       try {
+        const user = await authService.getSessionUser();
+        setCurrentUser(user || {
+          id: "usr-demo-001",
+          email: "hossein@supplylens.ai",
+          name: "Hossein",
+          role: "Lead Sourcing Director",
+          onboarding_status: "completed",
+          active_step: 6,
+        });
+
         const p: any = await api.business.getProfile("biz-001");
         if (p) {
           setFormData((prev) => ({
@@ -68,8 +88,18 @@ export default function CustomerBusinessProfilePage() {
         setIsLoading(false);
       }
     }
-    loadProfile();
+    loadData();
   }, []);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await authService.signOut();
+      router.push("/login");
+    } catch {
+      setIsSigningOut(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -113,8 +143,81 @@ export default function CustomerBusinessProfilePage() {
     );
   }
 
+  const activeUser = currentUser || {
+    id: "usr-demo-001",
+    email: "hossein@supplylens.ai",
+    name: "Hossein",
+    role: "Lead Sourcing Director",
+    onboarding_status: "completed" as const,
+    active_step: 6,
+  };
+
   return (
     <div className="space-y-6">
+      {/* =========================================================================
+          USER PROFILE & SOURCING OPERATOR CARD (With Prominent Sign Out Option)
+         ========================================================================= */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          {/* Avatar */}
+          <div className="relative shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-2xl font-black shadow-md">
+              {activeUser.name.charAt(0)}
+            </div>
+            <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-xs">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 fill-emerald-50" />
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">{activeUser.name}</h2>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
+                Tier 1 Verified
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold">
+                {activeUser.role}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-slate-500 mt-1 flex-wrap">
+              <div className="flex items-center gap-1">
+                <Mail className="w-3.5 h-3.5 text-slate-400" />
+                <span>{activeUser.email}</span>
+              </div>
+              <span>•</span>
+              <div className="flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <span>Bhubaneswar, India</span>
+              </div>
+              <span>•</span>
+              <span className="font-mono text-slate-400 text-[11px]">ID: {activeUser.id}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Controls & Sign Out Button */}
+        <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Active Session</span>
+          </div>
+
+          <button
+            onClick={handleSignOut}
+            disabled={isSigningOut}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-50 hover:bg-red-100/90 text-red-600 hover:text-red-700 border border-red-200 text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+            title="Sign out of SupplyLens"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          ENTERPRISE BUSINESS ARCHITECTURE & SOURCING PROFILE
+         ========================================================================= */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-6">
         <div>
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">

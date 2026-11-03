@@ -28,6 +28,7 @@ import {
 import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { LoginPage } from "@/components/auth/LoginPage";
+import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
 import { BusinessProfile, Supplier } from "@/types";
@@ -45,6 +46,7 @@ export default function CustomerPortalLayout({
   const [suppliers, setSuppliers] = useState<Supplier[]>(verifiedSuppliers);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -166,7 +168,7 @@ export default function CustomerPortalLayout({
         activeTab={getActiveRailKey()}
         onTabChange={handleTabChange}
         onOpenAssistant={() => setIsAssistantOpen(true)}
-        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAuth={() => setIsProfileModalOpen(true)}
         isLoggedIn={true}
         theme="light"
         isCollapsed={isExpanded}
@@ -339,7 +341,7 @@ export default function CustomerPortalLayout({
 
             {/* User Profile Pill */}
             <button
-              onClick={() => setIsAuthModalOpen(true)}
+              onClick={() => setIsProfileModalOpen(true)}
               className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
             >
               <div className="w-7 h-7 rounded-full bg-blue-600 p-0.5 shadow-xs flex items-center justify-center text-white text-xs font-bold">
@@ -380,7 +382,7 @@ export default function CustomerPortalLayout({
         }}
       />
 
-      {/* Auth / Profile Modal */}
+      {/* Auth / Login Modal */}
       {isAuthModalOpen && (
         <LoginPage
           isModal={true}
@@ -398,6 +400,17 @@ export default function CustomerPortalLayout({
           }}
         />
       )}
+
+      {/* User Profile & Sign Out Modal */}
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={currentUser}
+        onSignOut={() => {
+          setCurrentUser(null);
+          setIsProfileModalOpen(false);
+        }}
+      />
     </div>
   );
 }

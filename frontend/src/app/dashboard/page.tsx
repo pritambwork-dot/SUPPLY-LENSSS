@@ -7,6 +7,7 @@ import { ModernDashboard } from "@/components/dashboard/ModernDashboard";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { SupplierProfileModal } from "@/components/suppliers/SupplierProfileModal";
 import { LoginPage } from "@/components/auth/LoginPage";
+import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { authService, AuthUser } from "@/lib/auth";
 import { api } from "@/services/api";
 import {
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [selectedSupplierForModal, setSelectedSupplierForModal] = useState<Supplier | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function DashboardPage() {
         activeTab="dashboard"
         onTabChange={handleTabChange}
         onOpenAssistant={() => setIsAssistantOpen(true)}
-        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAuth={() => setIsProfileModalOpen(true)}
         isLoggedIn={true}
         theme="light"
         isCollapsed={isExpanded}
@@ -159,6 +161,7 @@ export default function DashboardPage() {
           onOpenSupplierModal={(sup) => setSelectedSupplierForModal(sup)}
           onNavigateTab={handleTabChange}
           onOpenLoginModal={() => setIsAuthModalOpen(true)}
+          onOpenProfileModal={() => setIsProfileModalOpen(true)}
           user={displayUser}
           onPerformLiveSearch={(query) => {
             router.push(`/vendors?search=${encodeURIComponent(query)}`);
@@ -202,7 +205,7 @@ export default function DashboardPage() {
         }}
       />
 
-      {/* Auth / Profile Modal */}
+      {/* Auth / Login Modal */}
       {isAuthModalOpen && (
         <LoginPage
           isModal={true}
@@ -220,6 +223,17 @@ export default function DashboardPage() {
           }}
         />
       )}
+
+      {/* User Profile & Sign Out Modal */}
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={currentUser}
+        onSignOut={() => {
+          setCurrentUser(null);
+          setIsProfileModalOpen(false);
+        }}
+      />
     </div>
   );
 }

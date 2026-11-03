@@ -126,7 +126,7 @@ export default function CustomerRequirementsPage() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] space-y-4">
+      <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.03)] space-y-4">
         <div>
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
@@ -182,7 +182,7 @@ export default function CustomerRequirementsPage() {
       </div>
 
       {/* Structured Requirements Table */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] space-y-4">
+      <div className="glass-panel rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.03)] space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -207,7 +207,7 @@ export default function CustomerRequirementsPage() {
           {requirements.map((item, index) => (
             <div
               key={index}
-              className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-2 hover:border-blue-400 transition-all group"
+              className="glass-panel-3d p-4 rounded-2xl space-y-2 group"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-wrap">

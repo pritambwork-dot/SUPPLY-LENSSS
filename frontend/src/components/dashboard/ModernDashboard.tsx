@@ -32,6 +32,8 @@ import {
   Minimize2
 } from "lucide-react";
 import { AiSphere3D } from "@/components/3d/AiSphere3D";
+import { GlobalGlobe } from "@/components/3d/GlobalGlobe";
+import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
 import { InteractiveChart } from "@/components/dashboard/InteractiveChart";
 import { Supplier, BusinessProfile } from "@/types";
 import { RequestQuotationModal } from "@/components/quotations/RequestQuotationModal";
@@ -282,11 +284,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         isExpanded ? "p-2 sm:p-3.5 max-w-none" : "p-3 sm:p-5"
       }`}
     >
-      {/* Tinted Glassmorphic Ambient Mesh Glows in Background */}
-      <div className="absolute -top-32 -left-32 w-[520px] h-[520px] bg-gradient-to-br from-cyan-400/15 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute top-24 -right-24 w-[480px] h-[480px] bg-gradient-to-bl from-indigo-400/15 via-purple-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute top-1/2 left-1/4 w-[420px] h-[420px] bg-gradient-to-tr from-cyan-400/10 via-emerald-400/8 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-12 right-1/4 w-[500px] h-[400px] bg-gradient-to-tl from-blue-400/10 via-teal-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+      {/* Animated Glassmorphism Ambient Mesh Glows in Background */}
+      <AnimatedGlassBackground />
 
       {/* =========================================================================
           TOP FLOATING BAR (Exact Light Mode Styling with Frosted Glassmorphism)
@@ -461,7 +460,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {/* Card 1: Active Sourcing Workspaces */}
-          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300">
+          <div className="glass-panel-3d rounded-3xl p-4 sm:p-5 flex flex-col gap-4">
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
@@ -519,7 +518,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
 
           {/* Card 2: Priority Projects */}
-          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-5 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-3">
+          <div className="glass-panel-3d rounded-3xl p-4 sm:p-5 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold text-slate-900 tracking-tight">
                 Priority Projects
@@ -629,7 +628,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {/* Card 1: Total Landed Budget */}
-          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between gap-3">
+          <div className="glass-panel-3d rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-3">
             <div>
               {/* Header with Currency Switcher */}
               <div className="flex items-center justify-between">
@@ -714,7 +713,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
 
           {/* Card 2: Commercial Settlement */}
-          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between gap-3 flex-1">
+          <div className="glass-panel-3d rounded-3xl p-5 flex flex-col justify-between gap-3 flex-1">
             <div className="flex flex-col gap-2.5">
               {/* Header: Commercial Settlement */}
               <div className="flex items-center justify-between">
@@ -796,7 +795,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             RIGHT COLUMN (lg:col-span-4): SupplyLens AI (In Place of Audit Engine)
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
-          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-full gap-4 relative overflow-hidden group">
+          <div className="glass-panel-3d rounded-3xl p-5 sm:p-6 flex flex-col justify-between h-full gap-4 relative overflow-hidden group">
             {/* Ambient soft glow aura */}
             <div className="absolute -top-16 -right-16 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all duration-500" />
 
@@ -852,9 +851,13 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 </span>
               </div>
 
-              {/* 3D Blue Ribbed Sphere Canvas */}
+              {/* 3D Visualizer Canvas (Sphere / Interactive Globe) */}
               <div className="w-full h-44 sm:h-48 flex items-center justify-center relative my-1">
-                <AiSphere3D className="w-full h-full" isAnalyzing={true} />
+                {aiSphereMode === "globe" ? (
+                  <GlobalGlobe suppliers={suppliers} height={190} className="w-full h-full" />
+                ) : (
+                  <AiSphere3D className="w-full h-full" isAnalyzing={true} />
+                )}
               </div>
             </div>
 
@@ -885,7 +888,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           BOTTOM SECTION: Verified Factory Partners (10-D AUDITED POOL)
           Responsive on Any Screen Size: Sleek Mobile Cards + Full Desktop Table
          ========================================================================= */}
-      <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.06)] transition-all duration-300 flex flex-col gap-4">
+      <div className="glass-panel rounded-3xl p-4 sm:p-6 flex flex-col gap-4">
         {/* Table / Section Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-wrap">

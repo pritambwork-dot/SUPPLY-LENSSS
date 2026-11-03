@@ -28,6 +28,7 @@ import {
 import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
+import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
 import { BusinessProfile, Supplier } from "@/types";
@@ -179,14 +180,13 @@ export default function CustomerPortalLayout({
           isExpanded ? "p-2 sm:p-3.5" : "p-3 sm:p-5"
         }`}
       >
-        {/* Tinted Glassmorphic Ambient Mesh Glows in Background */}
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-cyan-400/10 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-gradient-to-bl from-indigo-400/10 via-purple-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-        <div className="absolute bottom-10 left-1/3 w-96 h-96 bg-gradient-to-tr from-emerald-400/10 via-teal-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+        {/* Animated Glassmorphism Ambient Mesh Background */}
+        <AnimatedGlassBackground />
+
         {/* =========================================================================
-            TOP FLOATING COCKPIT BAR (Exact Light Mode Styling from Dashboard)
+            TOP FLOATING COCKPIT BAR (Frosted Glassmorphism with Backdrop Blur)
            ========================================================================= */}
-        <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-1 py-1 shrink-0">
+        <header className="bg-white/80 backdrop-blur-xl border border-white/80 shadow-[0_4px_24px_rgba(15,23,42,0.03)] rounded-3xl p-3 sm:p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-20 shrink-0">
           {/* Left: Section Dropdown Switcher + Quick Navigation Pills */}
           <div className="flex items-center gap-2 flex-wrap">
             <div className="relative">

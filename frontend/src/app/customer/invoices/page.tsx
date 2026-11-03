@@ -78,7 +78,7 @@ export default function CustomerInvoicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
@@ -118,7 +118,7 @@ export default function CustomerInvoicesPage() {
           <p className="text-xs font-semibold text-slate-500">Loading invoice records...</p>
         </div>
       ) : invoices.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4">
+        <div className="glass-panel rounded-3xl p-12 text-center space-y-4">
           <Receipt className="w-10 h-10 mx-auto text-slate-300" />
           <h3 className="text-lg font-bold text-slate-800">No Invoices Outstanding</h3>
           <p className="text-sm text-slate-500 max-w-sm mx-auto">
@@ -130,7 +130,7 @@ export default function CustomerInvoicesPage() {
           {invoices.map((inv) => (
             <div
               key={inv.id}
-              className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4"
+              className="glass-panel-3d rounded-3xl p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="space-y-1">

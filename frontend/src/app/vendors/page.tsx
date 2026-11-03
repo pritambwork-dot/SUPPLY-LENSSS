@@ -34,6 +34,7 @@ import { api } from "@/services/api";
 import { RequestQuotationModal } from "@/components/quotations/RequestQuotationModal";
 import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
+import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
 import { initialBusinessProfile } from "@/data/mockData";
 import { LayoutDashboard, FileText, Bell, Check, ChevronDown, ChevronLeft } from "lucide-react";
 
@@ -242,10 +243,13 @@ export default function VendorDirectoryPage() {
 
       {/* Main Cockpit Content Area */}
       <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative p-3 sm:p-5 flex flex-col gap-4 font-sans antialiased">
+        {/* Animated Glassmorphism Ambient Mesh Background */}
+        <AnimatedGlassBackground />
+
         {/* =========================================================================
-            TOP FLOATING COCKPIT BAR (Exact Light Mode Styling from Dashboard)
+            TOP FLOATING COCKPIT BAR (Frosted Glassmorphism with Backdrop Blur)
            ========================================================================= */}
-        <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-1 py-1 shrink-0">
+        <header className="bg-white/80 backdrop-blur-xl border border-white/80 shadow-[0_4px_24px_rgba(15,23,42,0.03)] rounded-3xl p-3 sm:p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-20 shrink-0">
           {/* Left: Section Dropdown Switcher + Quick Navigation Pills */}
           <div className="flex items-center gap-2 flex-wrap">
             <div className="relative">
@@ -383,7 +387,7 @@ export default function VendorDirectoryPage() {
         {/* Main Content Area */}
         <div className="w-full space-y-4">
         {/* Header & Sourcing Search */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] space-y-5">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] space-y-5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1.5">
@@ -513,7 +517,7 @@ export default function VendorDirectoryPage() {
             <p className="text-sm font-medium text-slate-500">Querying verified vendor database...</p>
           </div>
         ) : filteredSuppliers.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 space-y-4">
+          <div className="glass-panel rounded-3xl p-12 text-center space-y-4">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400">
               <Building2 className="w-7 h-7" />
             </div>
@@ -544,7 +548,7 @@ export default function VendorDirectoryPage() {
                 <div
                   key={supplier.id}
                   onClick={() => router.push(`/vendors/${supplier.id}`)}
-                  className="group relative bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08)] hover:border-blue-500/40 transition-all cursor-pointer flex flex-col justify-between"
+                  className="group relative glass-panel-3d rounded-3xl p-6 hover:border-blue-500/50 cursor-pointer flex flex-col justify-between"
                 >
                   <div className="space-y-4">
                     {/* Top Row: Logo, Name, Bookmark */}

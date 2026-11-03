@@ -2,9 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://frontend-sigma-ten-8zcwfqbyds.vercel.app"),
+  metadataBase: new URL("https://supplylenss.vercel.app"),
   title: "SupplyLens | AI-Powered Global Sourcing Intelligence",
   description: "Discover suppliers, explore raw-material options, compare pricing and MOQ, and make smarter procurement decisions with SupplyLens.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     title: "SupplyLens | AI-Powered Global Sourcing Intelligence",
     description: "Discover suppliers, compare sourcing options and make data-driven procurement decisions—all in one intelligent platform.",

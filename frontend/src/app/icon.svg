@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="45%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+
+    <!-- Glass Glow Gradient -->
+    <radialGradient id="glassGlow" cx="30%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Compass Needle Gradient Cyan -->
+    <linearGradient id="needleNorth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="50%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+
+    <!-- Compass Needle Gradient Indigo -->
+    <linearGradient id="needleSouth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#93C5FD" stop-opacity="0.7"/>
+    </linearGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="dropGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#1E3A8A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base with Gradient -->
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bgGrad)" filter="url(#dropGlow)"/>
+
+  <!-- Glass Specular Highlight Overlay -->
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#glassGlow)"/>
+
+  <!-- Inset Border Stroke -->
+  <rect x="34" y="34" width="444" height="444" rx="110" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4"/>
+
+  <!-- Outer Sourcing Compass Ring -->
+  <circle cx="256" cy="256" r="148" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="6" stroke-dasharray="8 8"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#38BDF8" stroke-opacity="0.45" stroke-width="3"/>
+
+  <!-- Cardinal Navigation Markers -->
+  <line x1="256" y1="92" x2="256" y2="114" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="256" y1="398" x2="256" y2="420" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-opacity="0.6"/>
+  <line x1="92" y1="256" x2="114" y2="256" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-opacity="0.6"/>
+  <line x1="398" y1="256" x2="420" y2="256" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Subtle Inner Diagonal Compass Coordinates -->
+  <circle cx="256" cy="256" r="112" fill="#0F172A" fill-opacity="0.15" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="2"/>
+
+  <!-- Dynamic Sourcing Compass Needle (Tilted 45 degrees toward top-right opportunity) -->
+  <g transform="translate(256, 256) rotate(45)">
+    <!-- North Pointer (Pointing Up: 0, -136) -->
+    <polygon points="0,-136 32,0 0,-18" fill="url(#needleNorth)"/>
+    <polygon points="0,-136 -32,0 0,-18" fill="#38BDF8"/>
+
+    <!-- South Pointer (Pointing Down: 0, 136) -->
+    <polygon points="0,136 32,0 0,18" fill="url(#needleSouth)"/>
+    <polygon points="0,136 -32,0 0,18" fill="#DBEAFE"/>
+
+    <!-- Center Pivot Ring & Core Dot -->
+    <circle cx="0" cy="0" r="28" fill="#FFFFFF" filter="url(#dropGlow)"/>
+    <circle cx="0" cy="0" r="20" fill="#2563EB"/>
+    <circle cx="0" cy="0" r="10" fill="#38BDF8"/>
+    <circle cx="0" cy="0" r="4" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Orbital Sourcing Trajectory Arc -->
+  <path d="M 145 320 A 130 95 35 0 1 367 192" fill="none" stroke="#38BDF8" stroke-width="4" stroke-dasharray="6 6" stroke-linecap="round"/>
+  <circle cx="367" cy="192" r="6" fill="#38BDF8"/>
+  <circle cx="367" cy="192" r="12" fill="#38BDF8" fill-opacity="0.25"/>
+</svg>

@@ -29,7 +29,8 @@ import {
   Receipt,
   FileText,
   Maximize2,
-  Minimize2
+  Minimize2,
+  X,
 } from "lucide-react";
 import { AiSphere3D } from "@/components/3d/AiSphere3D";
 import { GlobalGlobe } from "@/components/3d/GlobalGlobe";
@@ -37,6 +38,8 @@ import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackgr
 import { InteractiveChart } from "@/components/dashboard/InteractiveChart";
 import { Supplier, BusinessProfile } from "@/types";
 import { RequestQuotationModal } from "@/components/quotations/RequestQuotationModal";
+import { PaymentGatewayModal } from "@/components/billing/PaymentGatewayModal";
+import { ProfessionalTaxInvoice } from "@/components/billing/ProfessionalTaxInvoice";
 
 interface ModernDashboardProps {
   businessProfile: BusinessProfile;
@@ -73,6 +76,9 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [aiSphereMode, setAiSphereMode] = useState<"sphere" | "globe">("sphere");
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [taxInvoiceModalPreset, setTaxInvoiceModalPreset] = useState<"success_fee" | "landed_deal" | null>(null);
+  const [isCommercialSettled, setIsCommercialSettled] = useState(false);
 
   const displayUser = user || {
     name: "Hossein",
@@ -765,10 +771,17 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 </div>
               </div>
 
-              {/* Description Paragraph */}
-              <p className="text-[11px] text-slate-500 leading-relaxed">
-                You only pay when a deal is confirmed. SupplyLens assesses a transparent 5% fee on confirmed contracts.
-              </p>
+              {/* Description Paragraph / Settled Status */}
+              {isCommercialSettled ? (
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Settled via Razorpay Gateway • Escrow Protected</span>
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  You only pay when a deal is confirmed. SupplyLens assesses a transparent 5% fee on confirmed contracts.
+                </p>
+              )}
             </div>
 
             {/* Bottom Row: Track Deals & Pay Fee */}
@@ -780,13 +793,23 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 Track Deals (2)
               </button>
 
-              <button
-                onClick={() => onNavigateTab("billing")}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md hover:shadow-lg"
-              >
-                <Zap className="w-3.5 h-3.5" />
-                <span>Pay Fee (5%)</span>
-              </button>
+              {isCommercialSettled ? (
+                <button
+                  onClick={() => setTaxInvoiceModalPreset(currency === "USD" ? "landed_deal" : "success_fee")}
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Tax Invoice</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md hover:shadow-lg"
+                >
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>Pay Fee (5%)</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1124,6 +1147,41 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             setSelectedSupplierForRfq(null);
           }}
         />
+      )}
+
+      {/* Payment Gateway Modal */}
+      <PaymentGatewayModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        defaultAmount={7125}
+        defaultCurrency={currency}
+        onPaymentSuccess={() => {
+          setIsCommercialSettled(true);
+        }}
+        onViewTaxInvoice={(preset) => {
+          setTaxInvoiceModalPreset(preset);
+        }}
+      />
+
+      {/* Official Tax Invoice & Bill Modal */}
+      {taxInvoiceModalPreset && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md p-3 sm:p-6 flex flex-col items-center justify-start print:p-0 print:bg-white print:static print:inset-auto animate-in fade-in duration-200">
+          <div className="w-full max-w-4xl flex justify-end pb-2 print:hidden">
+            <button
+              onClick={() => setTaxInvoiceModalPreset(null)}
+              className="px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 font-bold text-xs shadow-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+              <span>Close Invoice</span>
+            </button>
+          </div>
+
+          <ProfessionalTaxInvoice
+            initialPreset={taxInvoiceModalPreset}
+            onBack={() => setTaxInvoiceModalPreset(null)}
+            isModal={true}
+          />
+        </div>
       )}
     </div>
   );

@@ -18,6 +18,7 @@ import {
 import { InvoiceItem } from "@/types";
 import { api } from "@/services/api";
 import { ProfessionalTaxInvoice } from "@/components/billing/ProfessionalTaxInvoice";
+import { PaymentGatewayModal } from "@/components/billing/PaymentGatewayModal";
 import { Sparkles, Printer, X } from "lucide-react";
 
 export default function CustomerInvoicesPage() {
@@ -206,9 +207,8 @@ export default function CustomerInvoicesPage() {
 
                 {inv.status !== "paid" && (
                   <button
-                    onClick={() => handlePayInvoice(inv)}
-                    disabled={isProcessingPayment}
-                    className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-1.5 active:scale-95"
+                    onClick={() => setSelectedInvoiceForPayment(inv)}
+                    className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-700 transition-colors flex items-center gap-1.5 active:scale-95 cursor-pointer"
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     Pay {inv.currency} {inv.total_amount?.toLocaleString()}
@@ -219,6 +219,26 @@ export default function CustomerInvoicesPage() {
           ))}
         </div>
       )}
+
+      {/* Payment Gateway Modal */}
+      <PaymentGatewayModal
+        isOpen={!!selectedInvoiceForPayment}
+        onClose={() => setSelectedInvoiceForPayment(null)}
+        invoice={selectedInvoiceForPayment}
+        onPaymentSuccess={(res) => {
+          if (selectedInvoiceForPayment) {
+            setInvoices((prev) =>
+              prev.map((inv) =>
+                inv.id === selectedInvoiceForPayment.id ? { ...inv, status: "paid" as any } : inv
+              )
+            );
+            showToast(`Payment settled! Invoice ${selectedInvoiceForPayment.invoice_number} is now marked as Paid.`);
+          }
+        }}
+        onViewTaxInvoice={(preset) => {
+          setSelectedTaxInvoicePreset(preset);
+        }}
+      />
 
       {/* =========================================================================
           PROFESSIONAL BILL & TAX INVOICE FULL MODAL SHEET

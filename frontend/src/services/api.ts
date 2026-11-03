@@ -14,10 +14,13 @@ import {
   mockDestinations,
   initialRecommendations,
   initialRequirements,
-  initialSavedSuppliers
+  initialSavedSuppliers,
+  initialQuotations
 } from "@/data/mockData";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+
+const demoQuotationsStore = [...initialQuotations];
 
 function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
   if (path.includes('/api/health')) {
@@ -171,6 +174,133 @@ function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
         paid_at: "2026-11-01"
       }
     ] as any;
+  }
+  if (path.includes('/api/customer/quotations')) {
+    if (options?.method === 'POST') {
+      let parsed: any = {};
+      try {
+        if (options.body) {
+          parsed = JSON.parse(options.body as string);
+        }
+      } catch {}
+      const targetSupplier = verifiedSuppliers.find(s => s.id === parsed.supplier_id);
+      const supplierName = targetSupplier ? targetSupplier.name : (parsed.supplier_name || "Jamestown Container Company");
+      const newId = `rfq-${Date.now().toString(36).slice(-6)}`;
+      const newRfq = {
+        id: newId,
+        business_id: parsed.business_id || "biz-001",
+        user_id: parsed.user_id || "hossein-001",
+        supplier_id: parsed.supplier_id || "sup-jamestown-002",
+        supplier_name: supplierName,
+        product_name: parsed.product_name || "Precision Custom Molded Pulp Cushion",
+        product_category: parsed.product_category || "Custom Tooling",
+        required_quantity: Number(parsed.required_quantity) || 500,
+        unit: parsed.unit || "pieces",
+        target_budget: parsed.target_budget ? Number(parsed.target_budget) : 50000,
+        currency: parsed.currency || "INR",
+        specifications: parsed.specifications || "Standard factory grade specifications with certified quality audit.",
+        delivery_terms: parsed.delivery_terms || "FOB (Free On Board Factory)",
+        destination_city: parsed.destination_city || "Bhubaneswar",
+        destination_country: parsed.destination_country || "India",
+        required_certifications: parsed.required_certifications || ["ISO 9001:2015"],
+        status: "submitted" as const,
+        quoted_unit_price: undefined,
+        quoted_moq: undefined,
+        quoted_lead_time_days: undefined,
+        quotation_valid_until: undefined,
+        vendor_notes: "Request routed to verified supplier commercial desk. Awaiting vendor response.",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      demoQuotationsStore.unshift(newRfq);
+      return {
+        status: "success",
+        message: "Quotation request registered with factory export desk.",
+        quotation: newRfq,
+      } as any;
+    }
+
+    const segments = path.split('/api/customer/quotations')[1]?.split('?')[0];
+    if (segments && segments.length > 1) {
+      const cleanId = segments.replace('/', '');
+      const matched = demoQuotationsStore.find(q => q.id === cleanId) || demoQuotationsStore[0];
+      return matched as any;
+    }
+
+    return {
+      business_id: "biz-001",
+      total_count: demoQuotationsStore.length,
+      quotations: demoQuotationsStore,
+    } as any;
+  }
+  if (path.includes('/api/customer/dashboard-metrics')) {
+    return {
+      customer_name: "Hossein",
+      business_name: "Sustainable Packaging Labs",
+      business_id: "biz-001",
+      industry: "Sustainable Packaging",
+      profile_completion_pct: 92,
+      active_searches_count: 3,
+      saved_vendors_count: initialSavedSuppliers.length,
+      new_search_results_count: 14,
+      pending_quotations_count: demoQuotationsStore.filter(q => q.status === 'submitted' || q.status === 'under_review').length,
+      total_quotations_count: demoQuotationsStore.length,
+      active_scenarios_count: 2,
+      confirmed_deals_count: 1,
+      outstanding_invoices_count: 1,
+      recent_activities: [
+        {
+          id: "act-1",
+          activity_type: "quotation_request",
+          title: "RFQ Submitted to Jamestown Container Company",
+          description: "Precision Custom Molded Pulp Cushion (500 pieces)",
+          created_at: "Just now"
+        },
+        {
+          id: "act-2",
+          activity_type: "deal_progress",
+          title: "Contract milestone signed with Utkal GreenFiber",
+          description: "Payment escrow settled under Deal DEAL-UTKAL-2026-001",
+          created_at: "2 hours ago"
+        }
+      ],
+      budget_summary: {
+        amount: 800000,
+        currency: "INR"
+      }
+    } as any;
+  }
+  if (path.includes('/api/customer/activity')) {
+    return {
+      business_id: "biz-001",
+      total_count: 4,
+      activities: [
+        {
+          id: "act-1",
+          activity_type: "quotation_request",
+          title: "RFQ Submitted to Jamestown Container Company",
+          description: "Precision Custom Molded Pulp Cushion (500 pieces)",
+          created_at: "Just now"
+        },
+        {
+          id: "act-2",
+          activity_type: "deal_progress",
+          title: "Contract milestone signed with Utkal GreenFiber",
+          description: "Payment escrow settled under Deal DEAL-UTKAL-2026-001",
+          created_at: "2 hours ago"
+        }
+      ]
+    } as any;
+  }
+  if (path.includes('/api/customer/vendor-interaction')) {
+    return { success: true, recorded: true } as any;
+  }
+  if (path.includes('/api/customer/requirements/interpret')) {
+    return {
+      interpreted_by: "SupplyLens AI Engine",
+      requirements: initialRequirements,
+      confidence: 0.96,
+    } as any;
   }
   return { success: true, demo: true } as any;
 }

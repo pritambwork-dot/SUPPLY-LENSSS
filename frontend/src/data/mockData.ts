@@ -7,7 +7,8 @@ import {
   ProgressMilestone,
   SavedSupplierItem,
   Destination,
-  SourcingScenario
+  SourcingScenario,
+  QuotationRequestItem
 } from "../types";
 
 export const initialBusinessProfile: BusinessProfile = {
@@ -646,4 +647,82 @@ export const mockDestinations: Destination[] = [
 ];
 
 export const mockInitialScenarios: SourcingScenario[] = [];
+
+export const initialQuotations: QuotationRequestItem[] = [
+  {
+    id: "rfq-demo-001",
+    business_id: "biz-001",
+    user_id: "hossein-001",
+    supplier_id: "sup-utkal-001",
+    supplier_name: "Utkal GreenFiber Pvt Ltd",
+    product_name: "Eco Molded Bagasse Meal Containers (750ml)",
+    product_category: "Sustainable Packaging",
+    required_quantity: 15000,
+    unit: "piece",
+    target_budget: 120000,
+    currency: "INR",
+    specifications: "3-compartment food grade, grease-proof, home compostable EN 13432 certified with PLA snap lids.",
+    delivery_terms: "FOB Factory, Cuttack",
+    destination_city: "Bhubaneswar",
+    destination_country: "India",
+    status: "quoted",
+    quoted_unit_price: 6.80,
+    quoted_moq: 1000,
+    quoted_lead_time_days: 12,
+    quotation_valid_until: "2026-12-15T00:00:00Z",
+    vendor_notes: "Official quote provided based on standard tooling. Custom embossed branding available with 5-day lead extension.",
+    created_at: "2026-11-03T19:45:00Z",
+    updated_at: "2026-11-03T20:00:00Z",
+  },
+  {
+    id: "rfq-demo-002",
+    business_id: "biz-001",
+    user_id: "hossein-001",
+    supplier_id: "sup-sjp-004",
+    supplier_name: "Shree Jagannath Packaging Industries",
+    product_name: "Multi-Layer Kraft Food Boxes",
+    product_category: "Food Packaging",
+    required_quantity: 8000,
+    unit: "piece",
+    target_budget: 65000,
+    currency: "INR",
+    specifications: "Water-resistant food grade virgin kraft board with soy-based ink exterior imprint.",
+    delivery_terms: "Door Delivery",
+    destination_city: "Bhubaneswar",
+    destination_country: "India",
+    status: "under_review",
+    quoted_unit_price: undefined,
+    quoted_moq: undefined,
+    quoted_lead_time_days: undefined,
+    quotation_valid_until: undefined,
+    vendor_notes: "Awaiting manufacturing line schedule confirmation from plant supervisor.",
+    created_at: "2026-11-03T19:50:00Z",
+    updated_at: "2026-11-03T19:50:00Z",
+  },
+  {
+    id: "rfq-demo-003",
+    business_id: "biz-001",
+    user_id: "hossein-001",
+    supplier_id: "sup-jamestown-002",
+    supplier_name: "Jamestown Container Company",
+    product_name: "Precision Custom Molded Pulp Cushion",
+    product_category: "Custom Tooling",
+    required_quantity: 500,
+    unit: "pieces",
+    target_budget: 50000,
+    currency: "INR",
+    specifications: "Engineered shock-absorbing molded pulp inserts for electronics casing.",
+    delivery_terms: "FOB (Free On Board Factory)",
+    destination_city: "Bhubaneswar",
+    destination_country: "India",
+    status: "submitted",
+    quoted_unit_price: undefined,
+    quoted_moq: undefined,
+    quoted_lead_time_days: undefined,
+    quotation_valid_until: undefined,
+    vendor_notes: "Request submitted to supplier official channels. Awaiting vendor response.",
+    created_at: "2026-11-04T00:10:00Z",
+    updated_at: "2026-11-04T00:10:00Z",
+  }
+];
 

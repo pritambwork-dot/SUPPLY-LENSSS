@@ -229,7 +229,7 @@ export default function CustomerSavedVendorsPage() {
         onClose={() => setSelectedSupplierForRfq(null)}
         supplier={selectedSupplierForRfq}
         onSuccess={(rfq) => {
-          showToast(`RFQ ${rfq.id} created successfully!`);
+          showToast(`RFQ ${rfq?.id || 'Request'} created successfully!`);
         }}
       />
     </div>

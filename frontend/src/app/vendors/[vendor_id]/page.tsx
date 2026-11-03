@@ -774,7 +774,7 @@ export default function VendorDetailPage() {
         supplier={supplier}
         initialProduct={selectedProductForRfq}
         onSuccess={(rfq) => {
-          showToast(`RFQ ${rfq.id} submitted successfully!`);
+          showToast(`RFQ ${rfq?.id || 'Request'} submitted successfully!`);
         }}
       />
 

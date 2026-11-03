@@ -675,7 +675,7 @@ export default function VendorDirectoryPage() {
         onClose={() => setSelectedSupplierForRfq(null)}
         supplier={selectedSupplierForRfq}
         onSuccess={(rfq) => {
-          showToast(`RFQ ${rfq.id} created successfully!`);
+          showToast(`RFQ ${rfq?.id || 'Request'} created successfully!`);
         }}
       />
 

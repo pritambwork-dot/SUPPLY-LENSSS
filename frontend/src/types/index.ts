@@ -123,7 +123,7 @@ export interface SupplierReview {
   verifiedBuyer: boolean;
 }
 
-export type SupplierType = 'OEM' | 'Contract Manufacturer' | 'Distributor' | 'Raw Material Producer';
+export type SupplierType = 'OEM' | 'Contract Manufacturer' | 'Distributor' | 'Raw Material Producer' | 'Manufacturer';
 
 export interface Supplier {
   id: string;
@@ -189,6 +189,7 @@ export interface Supplier {
   moq?: number;
   businessMatchScore?: number;
   riskScore?: string;
+  [key: string]: any;
 }
 
 export type RecommendationType =

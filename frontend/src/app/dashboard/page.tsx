@@ -6,7 +6,6 @@ import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { ModernDashboard } from "@/components/dashboard/ModernDashboard";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { SupplierProfileModal } from "@/components/suppliers/SupplierProfileModal";
-import { LoginPage } from "@/components/auth/LoginPage";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { authService, AuthUser } from "@/lib/auth";
 import { api } from "@/services/api";
@@ -25,7 +24,6 @@ export default function DashboardPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>(mockSuppliers);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [selectedSupplierForModal, setSelectedSupplierForModal] = useState<Supplier | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -160,7 +158,7 @@ export default function DashboardPage() {
           onOpenAssistant={() => setIsAssistantOpen(true)}
           onOpenSupplierModal={(sup) => setSelectedSupplierForModal(sup)}
           onNavigateTab={handleTabChange}
-          onOpenLoginModal={() => setIsAuthModalOpen(true)}
+          onOpenLoginModal={() => setIsProfileModalOpen(true)}
           onOpenProfileModal={() => setIsProfileModalOpen(true)}
           user={displayUser}
           onPerformLiveSearch={(query) => {
@@ -204,25 +202,6 @@ export default function DashboardPage() {
           handleTabChange(tab);
         }}
       />
-
-      {/* Auth / Login Modal */}
-      {isAuthModalOpen && (
-        <LoginPage
-          isModal={true}
-          onClose={() => setIsAuthModalOpen(false)}
-          onSuccess={(user) => {
-            setCurrentUser({
-              id: "usr-demo-001",
-              email: user.email,
-              name: user.name,
-              role: user.role,
-              onboarding_status: "completed",
-              active_step: 6,
-            });
-            setIsAuthModalOpen(false);
-          }}
-        />
-      )}
 
       {/* User Profile & Sign Out Modal */}
       <UserProfileModal

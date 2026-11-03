@@ -278,20 +278,26 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
 
   return (
     <div
-      className={`w-full min-h-screen bg-[#F4F6F9] text-slate-800 flex flex-col transition-all duration-300 gap-4 font-sans antialiased selection:bg-blue-600/20 ${
+      className={`w-full min-h-screen bg-[#F4F6F9] text-slate-800 flex flex-col transition-all duration-300 gap-4 font-sans antialiased selection:bg-blue-600/20 relative overflow-x-hidden pb-24 md:pb-6 ${
         isExpanded ? "p-2 sm:p-3.5 max-w-none" : "p-3 sm:p-5"
       }`}
     >
+      {/* Tinted Glassmorphic Ambient Mesh Glows in Background */}
+      <div className="absolute -top-32 -left-32 w-[520px] h-[520px] bg-gradient-to-br from-cyan-400/15 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute top-24 -right-24 w-[480px] h-[480px] bg-gradient-to-bl from-indigo-400/15 via-purple-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute top-1/2 left-1/4 w-[420px] h-[420px] bg-gradient-to-tr from-cyan-400/10 via-emerald-400/8 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-12 right-1/4 w-[500px] h-[400px] bg-gradient-to-tl from-blue-400/10 via-teal-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+
       {/* =========================================================================
-          TOP FLOATING BAR (Exact Light Mode Styling from Reference Screenshot)
+          TOP FLOATING BAR (Exact Light Mode Styling with Frosted Glassmorphism)
          ========================================================================= */}
-      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-1 py-1">
+      <header className="bg-white/80 backdrop-blur-xl border border-white/80 shadow-[0_4px_24px_rgba(15,23,42,0.03)] rounded-3xl p-3 sm:p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-20">
         {/* Left: Dashboard Dropdown + Quick Category Navigation Pills */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center justify-between lg:justify-start gap-2 flex-wrap">
           <div className="relative">
             <button
               onClick={() => setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)}
-              className="flex items-center gap-1.5 text-base font-extrabold text-slate-900 hover:text-blue-600 transition-colors cursor-pointer group"
+              className="flex items-center gap-1.5 text-base font-extrabold text-slate-900 hover:text-blue-600 transition-colors cursor-pointer group active:scale-95"
             >
               <span>Dashboard</span>
               <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-blue-600 transition-transform group-hover:translate-y-0.5" />
@@ -316,38 +322,40 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             )}
           </div>
 
-          {/* Quick Filter Navigation Pills */}
-          <button
-            onClick={() => onNavigateTab("verification")}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Verification</span>
-          </button>
+          {/* Quick Filter Navigation Pills (Scrollable horizontally on mobile) */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
+            <button
+              onClick={() => onNavigateTab("verification")}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Verification</span>
+            </button>
 
-          <button
-            onClick={() => onNavigateTab("deals")}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-          >
-            <FileText className="w-3.5 h-3.5 text-blue-600" />
-            <span>Deals</span>
-          </button>
+            <button
+              onClick={() => onNavigateTab("deals")}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/90 border border-blue-200 text-blue-700 hover:bg-blue-100/70 text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+            >
+              <FileText className="w-3.5 h-3.5 text-blue-600" />
+              <span>Deals</span>
+            </button>
 
-          <button
-            onClick={() => onNavigateTab("billing")}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-          >
-            <span className="text-emerald-600 font-bold">$</span>
-            <span>Billing</span>
-          </button>
+            <button
+              onClick={() => onNavigateTab("billing")}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+            >
+              <span className="text-emerald-600 font-bold">$</span>
+              <span>Billing</span>
+            </button>
 
-          <Link
-            href="/landing"
-            className="flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition-colors"
-          >
-            <span>Landing Page</span>
-            <ExternalLink className="w-3 h-3 text-slate-400" />
-          </Link>
+            <Link
+              href="/landing"
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/90 border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition-all active:scale-95 shrink-0"
+            >
+              <span>Landing Page</span>
+              <ExternalLink className="w-3 h-3 text-slate-400" />
+            </Link>
+          </div>
         </div>
 
         {/* Center: Search Pill with Search Button inside */}
@@ -367,11 +375,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search verified factories, HS codes, BOM components..."
-              className="w-full pl-10 pr-20 py-2 rounded-full bg-white border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-xs"
+              className="w-full pl-10 pr-20 py-2 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-xs"
             />
             <button
               type="submit"
-              className="absolute right-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-[11px] font-semibold text-slate-700 transition-colors cursor-pointer"
+              className="absolute right-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-[11px] font-semibold text-slate-700 transition-all active:scale-95 cursor-pointer"
             >
               Search
             </button>
@@ -379,18 +387,20 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         </div>
 
         {/* Right Controls: Audits notification, Date switcher, Expand Cockpit toggle, User profile */}
-        <div className="flex items-center gap-2 self-end lg:self-auto flex-wrap">
-          {/* Audits Pill */}
+        <div className="flex items-center gap-2 justify-between sm:justify-end flex-wrap">
+          {/* Audits Pill with live pulse ring */}
           <button
             onClick={() => onNavigateTab("verification")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200 hover:border-blue-300 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all active:scale-95 cursor-pointer shadow-xs relative"
           >
             <Bell className="w-3.5 h-3.5 text-blue-600" />
             <span className="text-[11px]">2 audits</span>
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping absolute -top-0.5 -right-0.5 opacity-75" />
+            <span className="w-2 h-2 rounded-full bg-blue-600 absolute -top-0.5 -right-0.5" />
           </button>
 
           {/* Date Selector Pill */}
-          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-700 shadow-xs">
+          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200 text-xs text-slate-700 shadow-xs">
             <ChevronLeft className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
             <span className="text-[11px] font-semibold px-1">Today, Nov 3</span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
@@ -400,10 +410,10 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           {onToggleExpand && (
             <button
               onClick={onToggleExpand}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer ${
                 isExpanded
                   ? "bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-400/20"
-                  : "bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50"
+                  : "bg-white/90 border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50"
               }`}
               title={isExpanded ? "Collapse to Standard View" : "Expand Dashboard View"}
             >
@@ -424,7 +434,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           {/* User Profile Pill */}
           <button
             onClick={onOpenProfileModal || onOpenLoginModal}
-            className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
+            className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/90 border border-slate-200 hover:border-blue-300 hover:bg-slate-50 transition-all active:scale-95 cursor-pointer shadow-xs"
           >
             <div className="w-7 h-7 rounded-full bg-blue-600 p-0.5 shadow-xs flex items-center justify-center text-white text-xs font-bold">
               {displayUser.name.charAt(0)}
@@ -451,7 +461,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {/* Card 1: Active Sourcing Workspaces */}
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 flex flex-col gap-4 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300">
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
@@ -467,14 +477,14 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50/90 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-all active:scale-95 cursor-pointer shadow-xs"
                 >
                   <span>{workspaceCategory}</span>
                   <ChevronDown className="w-3 h-3 text-slate-400" />
                 </button>
 
                 {isCategoryDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-40">
+                  <div className="absolute right-0 mt-2 w-44 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl p-1.5 z-40">
                     {["Manufacturing", "Packaging", "Raw Materials"].map((cat) => (
                       <button
                         key={cat}
@@ -493,13 +503,13 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             </div>
 
             {/* Inner Sourcing Activity Trend Box */}
-            <div className="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 flex flex-col gap-2 relative">
+            <div className="bg-slate-50/75 backdrop-blur-md border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2 relative">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-bold text-slate-900 tracking-wide">
                     Sourcing Activity Trend
                   </span>
-                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-blue-600 transition-colors" />
                 </div>
               </div>
 
@@ -509,7 +519,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
 
           {/* Card 2: Priority Projects */}
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col gap-3">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-5 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold text-slate-900 tracking-tight">
                 Priority Projects
@@ -523,14 +533,14 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </div>
             </div>
 
-            {/* Two Priority Project Cards */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Two Priority Project Cards (Responsive single col on mobile, 2 cols on tablet+) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Project 1: Eco Packaging */}
-              <div className="bg-slate-50/80 border border-slate-200/80 hover:border-blue-400 rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all group">
+              <div className="bg-slate-50/80 backdrop-blur-md border border-slate-200/80 hover:border-blue-400/80 hover:bg-white rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all duration-200 group active:scale-[0.98] shadow-xs hover:shadow-md">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span className="text-xs font-bold text-slate-900 truncate max-w-[90px]">
+                    <span className="text-xs font-bold text-slate-900 truncate max-w-[120px] sm:max-w-[90px]">
                       Eco Packaging
                     </span>
                   </div>
@@ -549,10 +559,10 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 {/* Member Avatars */}
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 border border-white flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-6 h-6 rounded-full bg-blue-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
                       U
                     </div>
-                    <div className="w-6 h-6 rounded-full bg-purple-600 border border-white flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-6 h-6 rounded-full bg-purple-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
                       M
                     </div>
                     <div className="w-6 h-6 rounded-full bg-slate-200 border border-white flex items-center justify-center text-[9px] font-medium text-slate-600">
@@ -561,7 +571,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                   </div>
                   <button
                     onClick={() => onNavigateTab("workspaces")}
-                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all active:scale-95 cursor-pointer shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
@@ -569,11 +579,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </div>
 
               {/* Project 2: IoT Sensors */}
-              <div className="bg-slate-50/80 border border-slate-200/80 hover:border-blue-400 rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all group">
+              <div className="bg-slate-50/80 backdrop-blur-md border border-slate-200/80 hover:border-blue-400/80 hover:bg-white rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all duration-200 group active:scale-[0.98] shadow-xs hover:shadow-md">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-slate-900 truncate max-w-[90px]">
+                    <span className="text-xs font-bold text-slate-900 truncate max-w-[120px] sm:max-w-[90px]">
                       IoT Sensors
                     </span>
                   </div>
@@ -592,10 +602,10 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 {/* Member Avatars */}
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full bg-emerald-600 border border-white flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-6 h-6 rounded-full bg-emerald-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
                       J
                     </div>
-                    <div className="w-6 h-6 rounded-full bg-amber-500 border border-white flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-6 h-6 rounded-full bg-amber-500 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
                       S
                     </div>
                     <div className="w-6 h-6 rounded-full bg-slate-200 border border-white flex items-center justify-center text-[9px] font-medium text-slate-600">
@@ -604,7 +614,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                   </div>
                   <button
                     onClick={() => onNavigateTab("workspaces")}
-                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all active:scale-95 cursor-pointer shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
@@ -619,7 +629,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {/* Card 1: Total Landed Budget */}
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between gap-3">
             <div>
               {/* Header with Currency Switcher */}
               <div className="flex items-center justify-between">
@@ -630,14 +640,14 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 <div className="relative">
                   <button
                     onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50/90 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-all active:scale-95 cursor-pointer shadow-xs"
                   >
                     <span>{currency === "USD" ? "US Dollar ($)" : "Indian Rupee (₹)"}</span>
                     <ChevronDown className="w-3 h-3 text-slate-400" />
                   </button>
 
                   {isCurrencyDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-36 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-40">
+                    <div className="absolute right-0 mt-2 w-36 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl p-1.5 z-40">
                       <button
                         onClick={() => {
                           setCurrency("USD");
@@ -668,7 +678,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </p>
 
               {/* Big Hero Stat: $ 23,094.57 with blue dollar sign */}
-              <div className="mt-4 flex items-baseline justify-between">
+              <div className="mt-4 flex items-baseline justify-between flex-wrap gap-2">
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-blue-600 font-extrabold text-2xl sm:text-3xl">
                     {currencySymbol}
@@ -704,7 +714,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
 
           {/* Card 2: Commercial Settlement */}
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between gap-3 flex-1">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between gap-3 flex-1">
             <div className="flex flex-col gap-2.5">
               {/* Header: Commercial Settlement */}
               <div className="flex items-center justify-between">
@@ -713,7 +723,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                 </h3>
                 <button
                   onClick={() => onNavigateTab("billing")}
-                  className="text-xs text-slate-500 hover:text-slate-900 font-semibold transition-colors cursor-pointer flex items-center gap-0.5"
+                  className="text-xs text-slate-500 hover:text-slate-900 font-semibold transition-colors cursor-pointer flex items-center gap-0.5 active:scale-95"
                 >
                   <span>Billing Hub</span>
                   <span className="text-[11px]">&gt;</span>
@@ -721,7 +731,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </div>
 
               {/* Zero Upfront Sourcing Fees Pill */}
-              <div className="w-full py-1.5 px-3 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs">
+              <div className="w-full py-1.5 px-3 rounded-full bg-emerald-50/90 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Zero Upfront Sourcing Fees</span>
               </div>
@@ -737,7 +747,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </div>
 
               {/* Fee Rate Box with 5% flat and Fee Due */}
-              <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-3 flex items-center justify-between">
+              <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-100 rounded-xl p-3 flex items-center justify-between shadow-xs">
                 <div className="flex flex-col text-left">
                   <span className="text-[10px] text-slate-500 font-medium">
                     Service Fee Rate
@@ -766,14 +776,14 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               <button
                 onClick={() => onNavigateTab("deals")}
-                className="text-xs text-slate-600 hover:text-slate-900 font-semibold transition-colors cursor-pointer"
+                className="text-xs text-slate-600 hover:text-slate-900 font-semibold transition-colors cursor-pointer active:scale-95"
               >
                 Track Deals (2)
               </button>
 
               <button
                 onClick={() => onNavigateTab("billing")}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md hover:shadow-lg"
               >
                 <Zap className="w-3.5 h-3.5" />
                 <span>Pay Fee (5%)</span>
@@ -786,7 +796,10 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             RIGHT COLUMN (lg:col-span-4): SupplyLens AI (In Place of Audit Engine)
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full gap-4">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-full gap-4 relative overflow-hidden group">
+            {/* Ambient soft glow aura */}
+            <div className="absolute -top-16 -right-16 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all duration-500" />
+
             <div>
               {/* Header: SupplyLens AI + Mode Toggles */}
               <div className="flex items-center justify-between mb-3">
@@ -809,7 +822,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                   <button
                     type="button"
                     onClick={() => setAiSphereMode("sphere")}
-                    className={`px-2.5 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
+                    className={`px-2.5 py-0.5 rounded-full font-bold transition-all active:scale-95 cursor-pointer ${
                       aiSphereMode === "sphere"
                         ? "bg-blue-600 text-white shadow-xs"
                         : "text-slate-600 hover:text-slate-900"
@@ -820,7 +833,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
                   <button
                     type="button"
                     onClick={() => setAiSphereMode("globe")}
-                    className={`px-2.5 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
+                    className={`px-2.5 py-0.5 rounded-full font-bold transition-all active:scale-95 cursor-pointer ${
                       aiSphereMode === "globe"
                         ? "bg-blue-600 text-white shadow-xs"
                         : "text-slate-600 hover:text-slate-900"
@@ -832,8 +845,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </div>
 
               {/* Status Banner */}
-              <div className="py-1.5 px-3 rounded-full bg-blue-50/70 border border-blue-100 flex items-center gap-2 text-xs text-blue-800 mb-2">
-                <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+              <div className="py-1.5 px-3 rounded-full bg-blue-50/80 backdrop-blur-sm border border-blue-100 flex items-center gap-2 text-xs text-blue-800 mb-2">
+                <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping shrink-0" />
                 <span className="text-[11px] font-medium truncate">
                   Updating supplier verification & quote audits now...
                 </span>
@@ -849,7 +862,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
               <button
                 onClick={onOpenAssistant}
-                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer group"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 cursor-pointer group shadow-md hover:shadow-lg"
               >
                 <Sparkles className="w-3.5 h-3.5 text-sky-200 group-hover:rotate-12 transition-transform" />
                 <span>Launch Autonomous Sourcing Agent</span>
@@ -870,24 +883,26 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
 
       {/* =========================================================================
           BOTTOM SECTION: Verified Factory Partners (10-D AUDITED POOL)
+          Responsive on Any Screen Size: Sleek Mobile Cards + Full Desktop Table
          ========================================================================= */}
-      <div className="bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col gap-4">
-        {/* Table Header Row */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-6 shadow-[0_4px_24px_rgba(15,23,42,0.03)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.06)] transition-all duration-300 flex flex-col gap-4">
+        {/* Table / Section Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <h3 className="text-base font-bold text-slate-900 tracking-tight">
               Verified Factory Partners
             </h3>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-              10-D AUDITED POOL
+            <span className="px-2 py-0.5 rounded-full bg-emerald-50/90 border border-emerald-200 text-emerald-700 text-[10px] font-bold flex items-center gap-1.5 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>10-D AUDITED POOL</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
             {/* Verification Desk Button */}
             <button
               onClick={() => onNavigateTab("verification")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
               <span>Verification Desk</span>
@@ -896,7 +911,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             {/* Explore All Suppliers Button */}
             <button
               onClick={() => onNavigateTab("suppliers")}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer group"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all active:scale-95 cursor-pointer group shadow-md hover:shadow-lg"
             >
               <span>Explore All Suppliers</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -904,8 +919,96 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           </div>
         </div>
 
-        {/* Data Table */}
-        <div className="overflow-x-auto -mx-5 sm:-mx-6 px-5 sm:px-6">
+        {/* ---------------------------------------------------------------------
+            MOBILE RESPONSIVE VIEW (block md:hidden):
+            Sleek Touch-Friendly Cards for Phones & Small Screens
+           --------------------------------------------------------------------- */}
+        <div className="block md:hidden space-y-3">
+          {filteredSuppliers.map((sup) => (
+            <div
+              key={sup.id}
+              className="bg-slate-50/80 backdrop-blur-md border border-slate-200/80 hover:border-blue-300 hover:bg-white rounded-2xl p-4 flex flex-col gap-3 transition-all shadow-xs"
+            >
+              {/* Header: Rank + Factory Name + Audit Badge */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 text-[11px] font-mono font-bold shadow-2xs">
+                    {sup.rank}
+                  </span>
+                  <div>
+                    <button
+                      onClick={() => handleOpenDossierForSupplier(sup)}
+                      className="text-left font-bold text-slate-900 hover:text-blue-600 transition-colors flex items-center gap-1 text-sm"
+                    >
+                      <span>{sup.name}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    </button>
+                    <span className="text-[11px] text-slate-500">
+                      {sup.city}, {sup.country}
+                    </span>
+                  </div>
+                </div>
+
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center gap-1 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>{sup.status}</span>
+                </span>
+              </div>
+
+              {/* Middle Row: Contact Desk & Pricing */}
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 font-medium block">
+                    Contact Lead
+                  </span>
+                  <span className="text-slate-800 font-semibold truncate block">
+                    {sup.admin}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block">
+                    {sup.adminRole}
+                  </span>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-400 font-medium block">
+                    Unit Quote (MOQ)
+                  </span>
+                  <span className="text-slate-900 font-extrabold font-mono block">
+                    {sup.price}
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-mono block">
+                    Min: {sup.moq}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom Actions: Instant RFQ & Audit Dossier */}
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={() => handleOpenRfqForSupplier(sup)}
+                  className="flex-1 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <Send className="w-3 h-3" />
+                  <span>Instant RFQ</span>
+                </button>
+
+                <button
+                  onClick={() => handleOpenDossierForSupplier(sup)}
+                  className="flex-1 py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>10-D Dossier</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ---------------------------------------------------------------------
+            DESKTOP DATA TABLE (hidden md:block):
+            Full 8-Column Audited Suppliers Matrix
+           --------------------------------------------------------------------- */}
+        <div className="hidden md:block overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-200/80 text-[11px] font-bold uppercase tracking-wider text-slate-400">

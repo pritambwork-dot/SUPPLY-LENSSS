@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
-import { LoginPage } from "@/components/auth/LoginPage";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
@@ -45,7 +44,6 @@ export default function CustomerPortalLayout({
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(initialBusinessProfile);
   const [suppliers, setSuppliers] = useState<Supplier[]>(verifiedSuppliers);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -177,10 +175,14 @@ export default function CustomerPortalLayout({
 
       {/* Main Cockpit Content Area */}
       <main
-        className={`flex-1 h-screen overflow-y-auto overflow-x-hidden relative transition-all duration-300 flex flex-col gap-4 font-sans antialiased ${
+        className={`flex-1 h-screen overflow-y-auto overflow-x-hidden relative transition-all duration-300 flex flex-col gap-4 font-sans antialiased pb-24 md:pb-6 ${
           isExpanded ? "p-2 sm:p-3.5" : "p-3 sm:p-5"
         }`}
       >
+        {/* Tinted Glassmorphic Ambient Mesh Glows in Background */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-cyan-400/10 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-gradient-to-bl from-indigo-400/10 via-purple-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute bottom-10 left-1/3 w-96 h-96 bg-gradient-to-tr from-emerald-400/10 via-teal-400/10 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
         {/* =========================================================================
             TOP FLOATING COCKPIT BAR (Exact Light Mode Styling from Dashboard)
            ========================================================================= */}
@@ -381,25 +383,6 @@ export default function CustomerPortalLayout({
           handleTabChange(tab);
         }}
       />
-
-      {/* Auth / Login Modal */}
-      {isAuthModalOpen && (
-        <LoginPage
-          isModal={true}
-          onClose={() => setIsAuthModalOpen(false)}
-          onSuccess={(user) => {
-            setCurrentUser({
-              id: "usr-demo-001",
-              email: user.email,
-              name: user.name,
-              role: user.role,
-              onboarding_status: "completed",
-              active_step: 6,
-            });
-            setIsAuthModalOpen(false);
-          }}
-        />
-      )}
 
       {/* User Profile & Sign Out Modal */}
       <UserProfileModal

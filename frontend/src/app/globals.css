@@ -158,3 +158,13 @@ html.dark body {
 .dark .leaflet-popup-tip {
   background: #0f172a !important;
 }
+
+/* Hide scrollbar utility for clean pill scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

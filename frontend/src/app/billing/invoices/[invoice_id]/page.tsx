@@ -1,21 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ProfessionalTaxInvoice } from "@/components/billing/ProfessionalTaxInvoice";
 
-export default function InvoiceRedirectPage() {
+export default function InvoiceDetailPage() {
+  const params = useParams();
   const router = useRouter();
-
-  useEffect(() => {
-    router.replace("/?tab=billing");
-  }, [router]);
+  const invoiceId = params?.invoice_id as string;
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#F7F9FC]">
-      <div className="flex flex-col items-center gap-3 text-slate-500">
-        <div className="w-8 h-8 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
-        <p className="text-xs font-medium">Opening Invoice inside Dashboard...</p>
-      </div>
+    <div className="min-h-screen w-full bg-[#F4F6F9] text-slate-800 p-4 sm:p-8 flex flex-col items-center justify-start print:p-0 print:bg-white">
+      <ProfessionalTaxInvoice
+        initialPreset={invoiceId?.includes("0002") || invoiceId?.includes("KLING") ? "landed_deal" : "success_fee"}
+        onBack={() => router.push("/customer/invoices")}
+      />
     </div>
   );
 }

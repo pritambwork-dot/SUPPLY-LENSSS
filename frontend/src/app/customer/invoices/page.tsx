@@ -17,11 +17,14 @@ import {
 } from "lucide-react";
 import { InvoiceItem } from "@/types";
 import { api } from "@/services/api";
+import { ProfessionalTaxInvoice } from "@/components/billing/ProfessionalTaxInvoice";
+import { Sparkles, Printer, X } from "lucide-react";
 
 export default function CustomerInvoicesPage() {
   const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState<InvoiceItem | null>(null);
+  const [selectedTaxInvoicePreset, setSelectedTaxInvoicePreset] = useState<"success_fee" | "landed_deal" | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -75,22 +78,32 @@ export default function CustomerInvoicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
-            <Receipt className="w-3.5 h-3.5" />
-            Commercial Sourcing Billing & Success Fees
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/80 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
+              <Receipt className="w-3.5 h-3.5" />
+              Commercial Sourcing Billing & Success Fees
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              SupplyLens Service Fee Invoices ({invoices.length})
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Transparent 5% platform success fee assessed strictly on confirmed deals. Zero upfront fees for search or discovery.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            SupplyLens Service Fee Invoices ({invoices.length})
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Transparent 5% platform success fee assessed strictly on confirmed deals. Zero upfront fees for search or discovery.
-          </p>
+
+          <button
+            onClick={() => setSelectedTaxInvoicePreset("success_fee")}
+            className="self-start sm:self-auto flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-blue-500/20 cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-cyan-200" />
+            <span>Generate Official Bill & Tax Invoice</span>
+          </button>
         </div>
 
         {/* Fee Policy Explanation Banner */}
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs text-slate-700 space-y-1.5">
+        <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70 text-xs text-slate-700 space-y-1.5">
           <span className="font-bold text-slate-900 block">5% Success Fee Policy Breakdown:</span>
           <p className="leading-relaxed">
             SupplyLens assesses a flat <strong>5% commercial service fee</strong> + 18% GST on the pre-tax contract value of verified completed sourcing deals. Payment can be settled via UPI, NetBanking, or Corporate Credit Card with instant cryptographic tax invoice issuance.
@@ -181,20 +194,21 @@ export default function CustomerInvoicesPage() {
               </div>
 
               {/* Actions Footer */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                <a
-                  href={`/billing`}
-                  className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1"
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setSelectedTaxInvoicePreset(inv.currency === "USD" ? "landed_deal" : "success_fee")}
+                  className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer py-1"
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  View Tax Invoice Document
-                </a>
+                  <span>View Official Bill & Tax Invoice</span>
+                </button>
 
                 {inv.status !== "paid" && (
                   <button
                     onClick={() => handlePayInvoice(inv)}
                     disabled={isProcessingPayment}
-                    className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-1.5"
+                    className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-1.5 active:scale-95"
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     Pay {inv.currency} {inv.total_amount?.toLocaleString()}
@@ -203,6 +217,30 @@ export default function CustomerInvoicesPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* =========================================================================
+          PROFESSIONAL BILL & TAX INVOICE FULL MODAL SHEET
+         ========================================================================= */}
+      {selectedTaxInvoicePreset && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md p-3 sm:p-6 flex flex-col items-center justify-start print:p-0 print:bg-white print:static print:inset-auto">
+          {/* Close button for non-print view */}
+          <div className="w-full max-w-4xl flex justify-end pb-2 print:hidden">
+            <button
+              onClick={() => setSelectedTaxInvoicePreset(null)}
+              className="px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 font-bold text-xs shadow-md flex items-center gap-1.5 transition-all active:scale-95"
+            >
+              <X className="w-4 h-4" />
+              <span>Close Invoice</span>
+            </button>
+          </div>
+
+          <ProfessionalTaxInvoice
+            initialPreset={selectedTaxInvoicePreset}
+            onBack={() => setSelectedTaxInvoicePreset(null)}
+            isModal={true}
+          />
         </div>
       )}
     </div>

@@ -168,3 +168,24 @@ html.dark body {
   scrollbar-width: none;
 }
 
+/* Print Styles for Professional Tax Invoices */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  aside,
+  nav,
+  header,
+  .print\:hidden {
+    display: none !important;
+  }
+  #official-tax-invoice {
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
+
+

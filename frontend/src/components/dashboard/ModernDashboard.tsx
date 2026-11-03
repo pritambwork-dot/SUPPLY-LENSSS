@@ -462,11 +462,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
          ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* ---------------------------------------------------------------------
-            LEFT COLUMN (lg:col-span-4): Active Sourcing Workspaces & Priority Projects
+            LEFT COLUMN (lg:col-span-4): Active Sourcing Workspaces
            --------------------------------------------------------------------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {/* Card 1: Active Sourcing Workspaces */}
-          <div className="glass-panel-3d rounded-3xl p-4 sm:p-5 flex flex-col gap-4">
+          <div className="glass-panel-3d rounded-3xl p-4 sm:p-5 flex flex-col gap-4 flex-1 justify-between">
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
@@ -508,7 +508,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             </div>
 
             {/* Inner Sourcing Activity Trend Box */}
-            <div className="bg-slate-50/75 backdrop-blur-md border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2 relative">
+            <div className="bg-slate-50/75 backdrop-blur-md border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2 relative flex-1 justify-between">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-bold text-slate-900 tracking-wide">
@@ -520,111 +520,6 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
 
               {/* Interactive Spline Chart */}
               <InteractiveChart />
-            </div>
-          </div>
-
-          {/* Card 2: Priority Projects */}
-          <div className="glass-panel-3d rounded-3xl p-4 sm:p-5 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-900 tracking-tight">
-                Priority Projects
-              </span>
-              <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
-                <span>02 of 5</span>
-                <div className="flex items-center gap-1">
-                  <ChevronLeft className="w-3.5 h-3.5 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors" />
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 hover:text-slate-700 cursor-pointer transition-colors" />
-                </div>
-              </div>
-            </div>
-
-            {/* Two Priority Project Cards (Responsive single col on mobile, 2 cols on tablet+) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {/* Project 1: Eco Packaging */}
-              <div className="bg-slate-50/80 backdrop-blur-md border border-slate-200/80 hover:border-blue-400/80 hover:bg-white rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all duration-200 group active:scale-[0.98] shadow-xs hover:shadow-md">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span className="text-xs font-bold text-slate-900 truncate max-w-[120px] sm:max-w-[90px]">
-                      Eco Packaging
-                    </span>
-                  </div>
-                  <MoreHorizontal className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 cursor-pointer transition-colors" />
-                </div>
-
-                <div>
-                  <div className="text-xs font-semibold text-slate-600">
-                    3,074 Verified
-                  </div>
-                  <div className="text-xs font-bold text-emerald-600 mt-0.5">
-                    + 9.23 %
-                  </div>
-                </div>
-
-                {/* Member Avatars */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
-                      U
-                    </div>
-                    <div className="w-6 h-6 rounded-full bg-purple-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
-                      M
-                    </div>
-                    <div className="w-6 h-6 rounded-full bg-slate-200 border border-white flex items-center justify-center text-[9px] font-medium text-slate-600">
-                      99+
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => onNavigateTab("workspaces")}
-                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all active:scale-95 cursor-pointer shadow-xs"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Project 2: IoT Sensors */}
-              <div className="bg-slate-50/80 backdrop-blur-md border border-slate-200/80 hover:border-blue-400/80 hover:bg-white rounded-2xl p-3.5 flex flex-col justify-between gap-3 transition-all duration-200 group active:scale-[0.98] shadow-xs hover:shadow-md">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-slate-900 truncate max-w-[120px] sm:max-w-[90px]">
-                      IoT Sensors
-                    </span>
-                  </div>
-                  <MoreHorizontal className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 cursor-pointer transition-colors" />
-                </div>
-
-                <div>
-                  <div className="text-xs font-semibold text-slate-600">
-                    2,831 Verified
-                  </div>
-                  <div className="text-xs font-bold text-emerald-600 mt-0.5">
-                    + 7.69 %
-                  </div>
-                </div>
-
-                {/* Member Avatars */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full bg-emerald-600 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
-                      J
-                    </div>
-                    <div className="w-6 h-6 rounded-full bg-amber-500 border border-white flex items-center justify-center text-[10px] font-bold text-white shadow-xs">
-                      S
-                    </div>
-                    <div className="w-6 h-6 rounded-full bg-slate-200 border border-white flex items-center justify-center text-[9px] font-medium text-slate-600">
-                      99+
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => onNavigateTab("workspaces")}
-                    className="w-6 h-6 rounded-full bg-white hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all active:scale-95 cursor-pointer shadow-xs"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>

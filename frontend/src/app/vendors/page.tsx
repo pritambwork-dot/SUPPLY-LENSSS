@@ -37,6 +37,7 @@ import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
 import { initialBusinessProfile } from "@/data/mockData";
 import { LayoutDashboard, FileText, Bell, Check, ChevronDown, ChevronLeft } from "lucide-react";
+import { LiveDateTime } from "@/components/common/LiveDateTime";
 
 export default function VendorDirectoryPage() {
   const router = useRouter();
@@ -362,11 +363,7 @@ export default function VendorDirectoryPage() {
               <span className="text-[11px]">2 audits</span>
             </Link>
 
-            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-700 shadow-xs">
-              <ChevronLeft className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-              <span className="text-[11px] font-semibold px-1">Today, Nov 3</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-            </div>
+            <LiveDateTime />
 
             <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 shadow-xs">
               <div className="w-7 h-7 rounded-full bg-blue-600 p-0.5 shadow-xs flex items-center justify-center text-white text-xs font-bold">

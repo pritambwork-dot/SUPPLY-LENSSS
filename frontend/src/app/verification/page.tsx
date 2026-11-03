@@ -28,6 +28,7 @@ import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
 import { BusinessProfile, Supplier } from "@/types";
+import { LiveDateTime } from "@/components/common/LiveDateTime";
 
 export default function VerificationDeskPage() {
   const router = useRouter();
@@ -239,11 +240,7 @@ export default function VerificationDeskPage() {
               <span className="text-[11px]">10-D Live Audit</span>
             </div>
 
-            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-700 shadow-xs">
-              <ChevronLeft className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-              <span className="text-[11px] font-semibold px-1">Today, Nov 3</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-            </div>
+            <LiveDateTime />
 
             <button
               onClick={() => setIsProfileModalOpen(true)}

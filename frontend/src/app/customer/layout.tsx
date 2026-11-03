@@ -28,6 +28,7 @@ import {
 import { LeftNavRail } from "@/components/layout/LeftNavRail";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
+import { LiveDateTime } from "@/components/common/LiveDateTime";
 import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
@@ -311,12 +312,8 @@ export default function CustomerPortalLayout({
               <span className="text-[11px]">2 audits</span>
             </Link>
 
-            {/* Date Selector Pill */}
-            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-700 shadow-xs">
-              <ChevronLeft className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-              <span className="text-[11px] font-semibold px-1">Today, Nov 3</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-            </div>
+            {/* Live Real-Time Date & Time Selector Pill */}
+            <LiveDateTime />
 
             {/* Expand / Standard View Toggle Button */}
             <button

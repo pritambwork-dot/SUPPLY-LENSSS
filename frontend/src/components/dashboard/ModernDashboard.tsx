@@ -40,6 +40,7 @@ import { Supplier, BusinessProfile } from "@/types";
 import { RequestQuotationModal } from "@/components/quotations/RequestQuotationModal";
 import { PaymentGatewayModal } from "@/components/billing/PaymentGatewayModal";
 import { ProfessionalTaxInvoice } from "@/components/billing/ProfessionalTaxInvoice";
+import { LiveDateTime } from "@/components/common/LiveDateTime";
 
 interface ModernDashboardProps {
   businessProfile: BusinessProfile;
@@ -404,12 +405,8 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
             <span className="w-2 h-2 rounded-full bg-blue-600 absolute -top-0.5 -right-0.5" />
           </button>
 
-          {/* Date Selector Pill */}
-          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200 text-xs text-slate-700 shadow-xs">
-            <ChevronLeft className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-            <span className="text-[11px] font-semibold px-1">Today, Nov 3</span>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-800 transition-colors" />
-          </div>
+          {/* Live Real-Time Date & Time Selector Pill */}
+          <LiveDateTime />
 
           {/* Expand / Standard View Cockpit Toggle */}
           {onToggleExpand && (

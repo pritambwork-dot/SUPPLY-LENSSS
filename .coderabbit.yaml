@@ -1,0 +1,28 @@
+# CodeRabbit Configuration for SupplyLens
+# Reference: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+version: "2"
+language: "en-US"
+tone_instructions: "Be concise, analytical, and prioritize high-impact architectural and security feedback."
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+
+chat:
+  auto_reply: true
+
+instructions: |
+  SupplyLens is an AI-powered global sourcing intelligence platform built with Next.js (TypeScript) and FastAPI (Python).
+  Strict project policies to enforce:
+  1. Real-Data-First: Flag any synthetic/mock supplier data, fake ratings, or fake contacts. Unknown fields must use "Not publicly available" or "Not verified".
+  2. Data Validation & Type Safety: Ensure strict Pydantic schemas in FastAPI and TypeScript interfaces in Next.js.
+  3. Security: Prevent API key leaks, ensure rate limiting and sanitization on external crawler inputs (Nimbleway/Apify).
+  4. Modularity: Maintain clear separation across ingestion, normalization, entity resolution, verification, and recommendation layers.

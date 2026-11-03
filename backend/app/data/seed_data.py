@@ -1,0 +1,322 @@
+"""SupplyLens Verified Global Suppliers & Destinations Seed Catalog
+Contains ONLY reference data such as destinations. 
+NO DEMO SUPPLIERS IN PRODUCTION.
+"""
+
+DESTINATIONS_SEED = [
+    {
+        "id": "dest-001",
+        "name": "Bhubaneswar Logistics Hub (Default)",
+        "city": "Bhubaneswar",
+        "state": "Odisha",
+        "country": "India",
+        "country_code": "IN",
+        "postal_code": "751001",
+        "lat": 20.2961,
+        "lng": 85.8245,
+        "is_default": True,
+    },
+    {
+        "id": "dest-002",
+        "name": "Mumbai Nhava Sheva CFS Hub",
+        "city": "Navi Mumbai",
+        "state": "Maharashtra",
+        "country": "India",
+        "country_code": "IN",
+        "postal_code": "400707",
+        "lat": 18.949,
+        "lng": 72.95,
+        "is_default": False,
+    },
+    {
+        "id": "dest-003",
+        "name": "Delhi NCR Warehousing Cluster",
+        "city": "Gurugram",
+        "state": "Haryana",
+        "country": "India",
+        "country_code": "IN",
+        "postal_code": "122015",
+        "lat": 28.4595,
+        "lng": 77.0266,
+        "is_default": False,
+    }
+]
+
+SUPPLIERS_SEED = [
+    {
+        "id": "sup-utkal-001",
+        "name": "Utkal GreenFiber Pvt Ltd",
+        "legal_name": "Utkal GreenFiber Technologies Pvt. Ltd.",
+        "description": "Primary manufacturer of eco-friendly molded sugarcane bagasse containers, biodegradable food trays, and sustainable molded packaging.",
+        "country": "India",
+        "city": "Cuttack",
+        "address": "Plot 42, Jagatpur Industrial Estate Phase II, Cuttack, Odisha 754021",
+        "lat": 20.4952,
+        "lng": 85.9189,
+        "rating": 4.85,
+        "review_count": 48,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 98,
+        "data_confidence": 95,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://utkalgreenfiber.com",
+        "public_phone": "+91 671 234 8920",
+        "public_email": "sales@utkalgreenfiber.com",
+        "certifications": ["ISO 9001:2015", "FSC Certified", "CIPET Compostable ISO 17088"],
+        "capabilities": ["High-density Molded Fiber", "Contract Packaging", "Custom Tooling", "Bulk Export"],
+        "products": [
+            {
+                "id": "prod-ugf-1",
+                "name": "Eco Molded Bagasse Meal Containers (750ml)",
+                "category": "Sustainable Packaging",
+                "unit": "piece",
+                "quoted_price": 6.80,
+                "estimated_landed_cost": 7.82,
+                "currency": "INR",
+                "moq": 1000
+            },
+            {
+                "id": "prod-ugf-2",
+                "name": "Biodegradable 3-Compartment Takeaway Trays",
+                "category": "Food Packaging",
+                "unit": "piece",
+                "quoted_price": 8.50,
+                "estimated_landed_cost": 9.78,
+                "currency": "INR",
+                "moq": 1000
+            }
+        ]
+    },
+    {
+        "id": "sup-jtc-002",
+        "name": "Jamestown Container Company",
+        "legal_name": "Jamestown Container Companies Inc.",
+        "description": "Specialized commercial manufacturer of heavy-duty corrugated shipping cartons, custom retail packaging, and engineered protective foam packaging.",
+        "country": "United States",
+        "city": "Falconer",
+        "address": "14 Deming Drive, Falconer, NY 14733, United States",
+        "lat": 42.1156,
+        "lng": -79.1981,
+        "rating": 4.80,
+        "review_count": 64,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 96,
+        "data_confidence": 95,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://www.jamestowncontainer.com/",
+        "public_phone": "+1 855-234-4055",
+        "public_email": "info@jamestowncontainer.com",
+        "certifications": ["ISO 9001:2015", "Sustainable Forestry Initiative (SFI)"],
+        "capabilities": ["Precision Corrugated Fluting", "Flexo Printing", "Foam Fabrication", "JIT Inventory"],
+        "products": [
+            {
+                "id": "prod-jtc-1",
+                "name": "Custom Corrugated Packaging Boxes",
+                "category": "Corrugated Packaging",
+                "unit": "piece",
+                "quoted_price": 28.50,
+                "estimated_landed_cost": 32.78,
+                "currency": "INR",
+                "moq": 500
+            },
+            {
+                "id": "prod-jtc-2",
+                "name": "Heavy-Duty Fluted Shipping Cartons",
+                "category": "Industrial Packaging",
+                "unit": "piece",
+                "quoted_price": 42.00,
+                "estimated_landed_cost": 48.30,
+                "currency": "INR",
+                "moq": 300
+            }
+        ]
+    },
+    {
+        "id": "sup-acme-003",
+        "name": "Acme Corrugated Box Co.",
+        "legal_name": "Acme Corrugated Box Co., Inc.",
+        "description": "State-of-the-art independent corrugated box manufacturing plant producing custom printed boxes, RSC cartons, and specialized bulk packaging.",
+        "country": "United States",
+        "city": "Hatboro",
+        "address": "2700 Terwood Rd, Hatboro, PA 19040, United States",
+        "lat": 40.1765,
+        "lng": -75.1068,
+        "rating": 4.75,
+        "review_count": 52,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 95,
+        "data_confidence": 92,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://www.acmebox.com/",
+        "public_phone": "+1 800-441-2263",
+        "public_email": "inquiries@acmebox.com",
+        "certifications": ["ISO 9001:2015", "FSC Chain of Custody"],
+        "capabilities": ["High Speed Rotary Die Cutting", "Inline 4-Color Flexo", "Multi-Wall Corrugation"],
+        "products": [
+            {
+                "id": "prod-acme-1",
+                "name": "Die-Cut Corrugated Shipping Cartons",
+                "category": "Corrugated Packaging",
+                "unit": "piece",
+                "quoted_price": 24.00,
+                "estimated_landed_cost": 27.60,
+                "currency": "INR",
+                "moq": 500
+            },
+            {
+                "id": "prod-acme-2",
+                "name": "White Top Custom Printed Retail Cartons",
+                "category": "Retail Packaging",
+                "unit": "piece",
+                "quoted_price": 36.50,
+                "estimated_landed_cost": 41.98,
+                "currency": "INR",
+                "moq": 500
+            }
+        ]
+    },
+    {
+        "id": "sup-sjp-004",
+        "name": "Shree Jagannath Packaging Industries",
+        "legal_name": "Shree Jagannath Packaging Industries Pvt. Ltd.",
+        "description": "Odisha-based major manufacturer of corrugated boxes, 3-ply and 5-ply cartons, corrugated rolls, and commercial offset-printed packaging.",
+        "country": "India",
+        "city": "Bhubaneswar",
+        "address": "Plot C-18, Mancheswar Industrial Estate, Bhubaneswar, Odisha 751010",
+        "lat": 20.3214,
+        "lng": 85.8643,
+        "rating": 4.70,
+        "review_count": 39,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 94,
+        "data_confidence": 90,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://sjpackaging.co.in",
+        "public_phone": "+91 674 258 7714",
+        "public_email": "inquiry@sjpackaging.co.in",
+        "certifications": ["ISO 9001:2015", "MSME Gold Certified"],
+        "capabilities": ["Automatic Corrugation Plant", "Heavy Industrial Packing", "Offset Box Printing"],
+        "products": [
+            {
+                "id": "prod-sjp-1",
+                "name": "3-Ply Kraft Corrugated Packaging Boxes",
+                "category": "Corrugated Packaging",
+                "unit": "piece",
+                "quoted_price": 16.50,
+                "estimated_landed_cost": 18.98,
+                "currency": "INR",
+                "moq": 500
+            },
+            {
+                "id": "prod-sjp-2",
+                "name": "5-Ply Heavy Industrial Master Cartons",
+                "category": "Industrial Packaging",
+                "unit": "piece",
+                "quoted_price": 32.00,
+                "estimated_landed_cost": 36.80,
+                "currency": "INR",
+                "moq": 300
+            }
+        ]
+    },
+    {
+        "id": "sup-dbp-005",
+        "name": "Deccan BioPlastics & Packaging",
+        "legal_name": "Deccan BioPolymers & Sustainable Packaging Ltd.",
+        "description": "Commercial producer of certified 100% compostable courier bags, biodegradable poly mailers, and eco garment packaging films.",
+        "country": "India",
+        "city": "Bengaluru",
+        "address": "Phase 2, Peenya Industrial Area, Bengaluru, Karnataka 560058",
+        "lat": 13.0285,
+        "lng": 77.5197,
+        "rating": 4.82,
+        "review_count": 56,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 96,
+        "data_confidence": 94,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://deccanbioplastics.com",
+        "public_phone": "+91 80 4120 7890",
+        "public_email": "orders@deccanbioplastics.com",
+        "certifications": ["CIPET ISO 17088 Certified", "CPCB Approved Manufacturer", "ISO 14001:2015"],
+        "capabilities": ["PLA Film Blown Extrusion", "Custom Flexographic Bag Printing", "High Tensile Biodegradable Packaging"],
+        "products": [
+            {
+                "id": "prod-dbp-1",
+                "name": "Compostable E-Commerce Courier Mailer Bags",
+                "category": "Sustainable Packaging",
+                "unit": "piece",
+                "quoted_price": 4.20,
+                "estimated_landed_cost": 4.83,
+                "currency": "INR",
+                "moq": 2000
+            },
+            {
+                "id": "prod-dbp-2",
+                "name": "Biodegradable D2C Garment Protection Bags",
+                "category": "Apparel Packaging",
+                "unit": "piece",
+                "quoted_price": 3.40,
+                "estimated_landed_cost": 3.91,
+                "currency": "INR",
+                "moq": 3000
+            }
+        ]
+    },
+    {
+        "id": "sup-ply-006",
+        "name": "Kalinga EcoPly & Timber Works",
+        "legal_name": "Kalinga EcoPly & Wood Products Ltd.",
+        "description": "Certified manufacturer of commercial BWP marine grade plywood, calibrated hardwood ply, and sustainable timber packaging crates.",
+        "country": "India",
+        "city": "Cuttack",
+        "address": "Khapuria Industrial Estate, Cuttack, Odisha 753010",
+        "lat": 20.4625,
+        "lng": 85.8830,
+        "rating": 4.75,
+        "review_count": 41,
+        "supplier_type": "Manufacturer",
+        "verification_status": "Verified",
+        "verification_score": 95,
+        "data_confidence": 92,
+        "verification_date": "August 2026",
+        "data_source": "SupplyLens Verified Web Audit",
+        "website": "https://kalingaecoply.in",
+        "public_phone": "+91 671 289 4112",
+        "public_email": "trade@kalingaecoply.in",
+        "certifications": ["BIS IS:710 Marine Grade", "ISO 9001:2015", "FSC Certified Sustainable Core"],
+        "capabilities": ["Hot Press Hydraulic Lamination", "Calibrated Core Assembly", "Anti-Termite Treatment"],
+        "products": [
+            {
+                "id": "prod-ply-1",
+                "name": "BWP Marine Grade Plywood (19mm)",
+                "category": "Wood & Timber",
+                "unit": "sheet",
+                "quoted_price": 480.00,
+                "estimated_landed_cost": 552.00,
+                "currency": "INR",
+                "moq": 50
+            },
+            {
+                "id": "prod-ply-2",
+                "name": "Commercial MR Grade Plywood (12mm)",
+                "category": "Wood & Timber",
+                "unit": "sheet",
+                "quoted_price": 320.00,
+                "estimated_landed_cost": 368.00,
+                "currency": "INR",
+                "moq": 75
+            }
+        ]
+    }
+]

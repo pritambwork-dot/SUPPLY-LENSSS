@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 20% 99%; /* #FBFBFD Apple warm light neutral */
+    --foreground: 240 10% 12%; /* #1D1D1F Apple dark charcoal */
+    --card: 0 0% 100%; /* Pure white surface */
+    --card-foreground: 240 10% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 12%;
+    --primary: 211 100% 45%; /* #0071E3 Apple San Francisco Blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%; /* #F5F5F7 Light Apple grey */
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%; /* #6E6E73 Apple soft secondary text */
+    --accent: 211 100% 96%;
+    --accent-foreground: 211 100% 45%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 91%; /* #E5E5EA Apple subtle border */
+    --input: 240 6% 91%;
+    --ring: 211 100% 45%;
+    --radius: 1.125rem; /* 18px */
+  }
+
+  .dark {
+    --background: 0 0% 0%; /* #000000 Apple pure OLED dark */
+    --foreground: 0 0% 98%; /* #FAFAFA Apple primary text in dark */
+    --card: 240 10% 11%; /* #1C1C1E Apple elevated grouped card */
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 11%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 211 100% 50%; /* #0A84FF Apple System Blue (Dark) */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 9% 17%; /* #2C2C2E Apple secondary grouped card */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 9% 17%;
+    --muted-foreground: 240 5% 65%; /* #98989D Apple secondary label */
+    --accent: 211 100% 20%;
+    --accent-foreground: 211 100% 65%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 20%; /* #38383A Apple subtle hairline border */
+    --input: 240 6% 20%;
+    --ring: 211 100% 50%;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", Inter, system-ui, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fbfbfd;
+  color: #1d1d1f;
+  letter-spacing: -0.011em;
+}
+
+.dark body,
+html.dark body {
+  background-color: #000000;
+  color: #f5f5f7;
+}
+
+/* iOS Frosted Glass & Surface Helpers */
+.ios-glass {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.dark .ios-glass {
+  background-color: rgba(28, 28, 30, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.ios-card {
+  border-radius: 1.5rem; /* 24px */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+}
+
+.dark .ios-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #1c1c1e;
+  box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Apple-style smooth minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Leaflet Apple Maps-style light presentation */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif !important;
+}
+
+.dark .leaflet-container {
+  background: #0b0f17 !important;
+}
+
+.dark .leaflet-tile {
+  filter: brightness(0.95) contrast(1.05);
+}
+
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #1d1d1f !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 1.125rem !important; /* 18px radius */
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: inherit !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+}
+
+.dark .leaflet-popup-tip {
+  background: #0f172a !important;
+}

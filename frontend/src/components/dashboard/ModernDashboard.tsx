@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -80,6 +80,15 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [taxInvoiceModalPreset, setTaxInvoiceModalPreset] = useState<"success_fee" | "landed_deal" | null>(null);
   const [isCommercialSettled, setIsCommercialSettled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("supplylens_commercial_settled");
+        if (saved === "true") setIsCommercialSettled(true);
+      } catch {}
+    }
+  }, []);
 
   const displayUser = user || {
     name: "Hossein",
@@ -686,13 +695,23 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               </button>
 
               {isCommercialSettled ? (
-                <button
-                  onClick={() => setTaxInvoiceModalPreset(currency === "USD" ? "landed_deal" : "success_fee")}
-                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Tax Invoice</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setTaxInvoiceModalPreset(currency === "USD" ? "landed_deal" : "success_fee")}
+                    className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Tax Invoice</span>
+                  </button>
+                  <button
+                    onClick={() => setIsPaymentModalOpen(true)}
+                    className="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                    title="Pay another fee / launch gateway"
+                  >
+                    <Zap className="w-3 h-3 text-amber-500" />
+                    <span>Pay</span>
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={() => setIsPaymentModalOpen(true)}
@@ -1049,6 +1068,11 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         defaultCurrency={currency}
         onPaymentSuccess={() => {
           setIsCommercialSettled(true);
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("supplylens_commercial_settled", "true");
+            } catch {}
+          }
         }}
         onViewTaxInvoice={(preset) => {
           setTaxInvoiceModalPreset(preset);

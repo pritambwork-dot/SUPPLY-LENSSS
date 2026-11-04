@@ -35,7 +35,7 @@ interface SupplierProfileModalProps {
   supplier: Supplier | null;
   onClose: () => void;
   onToggleCompare: (supplier: Supplier) => void;
-  isCompared: boolean;
+  isCompared?: boolean;
   onToggleSave?: (supplier: Supplier) => void;
   isSaved?: boolean;
   onCalculateLandedCost?: (supplier: Supplier) => void;
@@ -45,7 +45,7 @@ export const SupplierProfileModal: React.FC<SupplierProfileModalProps> = ({
   supplier,
   onClose,
   onToggleCompare,
-  isCompared,
+  isCompared = false,
   onToggleSave,
   isSaved = false,
   onCalculateLandedCost,

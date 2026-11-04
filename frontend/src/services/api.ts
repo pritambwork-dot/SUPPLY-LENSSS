@@ -22,6 +22,102 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
 
 const demoQuotationsStore = [...initialQuotations];
 
+export const initialDemoInvoices = [
+  {
+    id: "inv-pending-003",
+    invoice_number: "SL-2026-0003",
+    deal_id: "deal-002",
+    customer_name: "Sustainable Packaging Labs",
+    customer_email: "billing@ecopack.io",
+    supplier_name: "Klingele Paper & Packaging SE",
+    subtotal: 7125,
+    base_fee_amount: 7125,
+    tax_amount: 1283,
+    total_amount: 8408,
+    currency: "USD",
+    status: "issued" as const,
+    issued_date: "2026-11-04T00:00:00Z",
+    due_date: "2026-11-19T00:00:00Z",
+    notes: "5% Commercial Success Fee on Confirmed Sourcing Order (Klingele Packaging)",
+  },
+  {
+    id: "inv-pending-004",
+    invoice_number: "SL-2026-0004",
+    deal_id: "deal-001",
+    customer_name: "Sustainable Packaging Labs",
+    customer_email: "billing@ecopack.io",
+    supplier_name: "Utkal GreenFiber Pvt Ltd",
+    subtotal: 17000,
+    base_fee_amount: 17000,
+    tax_amount: 3060,
+    total_amount: 20060,
+    currency: "INR",
+    status: "issued" as const,
+    issued_date: "2026-11-02T10:00:00Z",
+    due_date: "2026-11-17T10:00:00Z",
+    notes: "5% Platform Service Fee on Confirmed Bio Bagasse PO #CTR-2026-088",
+  },
+  {
+    id: "inv-245d3111",
+    invoice_number: "SL-2026-0001",
+    deal_id: "deal-003",
+    customer_name: "Sustainable Packaging Labs",
+    customer_email: "billing@ecopack.io",
+    supplier_name: "Deccan BioPlastics & Packaging",
+    subtotal: 50000,
+    base_fee_amount: 50000,
+    tax_amount: 9000,
+    total_amount: 59000,
+    currency: "INR",
+    status: "paid" as const,
+    issued_date: "2026-10-18T14:30:00Z",
+    due_date: "2026-11-02T14:30:00Z",
+    paid_at: "2026-10-24T16:15:00Z",
+    payment_method: "Razorpay Standard Gateway",
+    payment_reference: "rzp_pay_confirmed_001",
+    notes: "Settled in full via Corporate UPI / Razorpay Gateway",
+  },
+  {
+    id: "inv-d3ca76e2",
+    invoice_number: "SL-2026-0002",
+    deal_id: "deal-004",
+    customer_name: "Sustainable Packaging Labs",
+    customer_email: "billing@ecopack.io",
+    supplier_name: "Aura Organic Looms & Knitwear",
+    subtotal: 7000,
+    base_fee_amount: 7000,
+    tax_amount: 1260,
+    total_amount: 8260,
+    currency: "INR",
+    status: "paid" as const,
+    issued_date: "2026-09-12T09:15:00Z",
+    due_date: "2026-09-27T09:15:00Z",
+    paid_at: "2026-09-20T11:45:00Z",
+    payment_method: "Bank NEFT Wire",
+    payment_reference: "NEFT-AXIS-2026-092044",
+    notes: "Settled via Corporate Escrow Bank Wire",
+  },
+];
+
+function getStoredInvoices() {
+  if (typeof window === "undefined") return initialDemoInvoices;
+  try {
+    const raw = localStorage.getItem("supplylens_demo_invoices");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return initialDemoInvoices;
+}
+
+function saveStoredInvoices(invoices: any[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("supplylens_demo_invoices", JSON.stringify(invoices));
+  } catch {}
+}
+
 function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
   if (path.includes('/api/health')) {
     return { status: "ok", mode: "vercel_demo", version: "2.0.0" } as any;
@@ -163,17 +259,52 @@ function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
     ] as any;
   }
   if (path.includes('/api/invoices')) {
-    return [
-      {
-        id: "inv-2026-001",
-        deal_id: "deal-001",
-        amount: 2250,
-        currency: "USD",
-        status: "paid",
-        due_date: "2026-11-15",
-        paid_at: "2026-11-01"
+    return getStoredInvoices() as any;
+  }
+  if (path.includes('/api/payments/checkout')) {
+    let parsed: any = {};
+    try {
+      if (options?.body) parsed = JSON.parse(options.body as string);
+    } catch {}
+    const payRef = `rzp_pay_${Math.random().toString(36).substring(2, 12)}`;
+    return {
+      gateway: "razorpay",
+      order_id: `order_${Math.random().toString(36).substring(2, 14)}`,
+      payment_reference: payRef,
+      key_id: "rzp_test_supplylens_demo",
+      invoice_id: parsed.invoice_id || "inv-pending-003",
+      amount: 7125,
+      currency: "USD",
+      status: "order_created",
+      created_at: new Date().toISOString(),
+    } as any;
+  }
+  if (path.includes('/api/payments/verify')) {
+    let parsed: any = {};
+    try {
+      if (options?.body) parsed = JSON.parse(options.body as string);
+    } catch {}
+    const invId = parsed.invoice_id;
+    const currentInvoices = getStoredInvoices();
+    const updated = currentInvoices.map((inv: any) => {
+      if (inv.id === invId || (inv.status !== "paid" && (!invId || invId === "inv-pending-003"))) {
+        return {
+          ...inv,
+          status: "paid",
+          paid_at: new Date().toISOString(),
+          payment_method: "Razorpay Standard Gateway",
+          payment_reference: parsed.payment_reference || `rzp_pay_${Math.random().toString(36).substring(2, 10)}`,
+        };
       }
-    ] as any;
+      return inv;
+    });
+    saveStoredInvoices(updated);
+    return {
+      gateway: "razorpay",
+      payment_reference: parsed.payment_reference || "rzp_pay_success",
+      status: "captured",
+      message: "Payment verified via Razorpay Standard Gateway",
+    } as any;
   }
   if (path.includes('/api/customer/quotations')) {
     if (options?.method === 'POST') {

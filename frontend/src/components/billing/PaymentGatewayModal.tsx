@@ -58,11 +58,17 @@ export function PaymentGatewayModal({
 
   // Determine financial values
   const currency = invoice?.currency || deal?.currency || defaultCurrency;
-  const baseFee = invoice?.base_fee_amount || (invoice?.subtotal) || defaultAmount;
+  const baseFee =
+    invoice?.base_fee_amount ||
+    invoice?.subtotal ||
+    (deal ? Math.round(deal.confirmed_deal_value * 0.05) : defaultAmount);
   const taxAmount = invoice?.tax_amount || Math.round(baseFee * 0.18);
   const totalAmount = invoice?.total_amount || (baseFee + taxAmount);
-  const invoiceNumber = invoice?.invoice_number || `SL-INV-${Date.now().toString().slice(-6)}`;
-  const contractGmv = deal?.confirmed_deal_value || (baseFee * 20);
+  const invoiceNumber =
+    invoice?.invoice_number ||
+    (deal?.contract_reference ? `INV-${deal.contract_reference}` : `SL-INV-${Date.now().toString().slice(-6)}`);
+  const contractGmv =
+    deal?.confirmed_deal_value || (invoice ? Math.round(baseFee * 20) : baseFee * 20);
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +89,7 @@ export function PaymentGatewayModal({
   const handleExecutePayment = async () => {
     setIsProcessing(true);
     try {
-      const invId = invoice?.id || "inv-fee-demo-001";
+      const invId = invoice?.id || (deal ? `inv-deal-${deal.id}` : "inv-pending-003");
       // 1. Checkout session via API
       let checkoutRes: any;
       try {
@@ -108,7 +114,37 @@ export function PaymentGatewayModal({
         // Fallback for mock environments
       }
 
-      // 3. Log activity
+      // 3. Persist settlement locally
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("supplylens_commercial_settled", "true");
+          const rawInvoices = localStorage.getItem("supplylens_demo_invoices");
+          if (rawInvoices) {
+            const list = JSON.parse(rawInvoices);
+            const updated = list.map((item: any) =>
+              item.id === invId || item.invoice_number === invoiceNumber
+                ? {
+                    ...item,
+                    status: "paid",
+                    paid_at: new Date().toISOString(),
+                    payment_method:
+                      selectedMethod === "razorpay"
+                        ? "Razorpay Standard Gateway"
+                        : selectedMethod === "upi"
+                        ? "Instant UPI (QR)"
+                        : selectedMethod === "card"
+                        ? "Corporate Credit Card"
+                        : "Escrow Bank Wire",
+                    payment_reference: payRef,
+                  }
+                : item
+            );
+            localStorage.setItem("supplylens_demo_invoices", JSON.stringify(updated));
+          }
+        } catch {}
+      }
+
+      // 4. Log activity
       try {
         api.customer.logActivity({
           activity_type: "payment_completed",

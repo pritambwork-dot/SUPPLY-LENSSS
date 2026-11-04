@@ -119,6 +119,18 @@ export const BillingDashboardView: React.FC<BillingDashboardViewProps> = ({
   const [analytics, setAnalytics] = useState<any>(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("supplylens_demo_invoices");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setInvoices(parsed);
+          }
+        }
+      } catch {}
+    }
+
     api.monetization.getAnalytics("INR")
       .then((data) => {
         if (data) setAnalytics(data);
@@ -169,6 +181,12 @@ export const BillingDashboardView: React.FC<BillingDashboardViewProps> = ({
       });
 
       setInvoices(updatedInvoices);
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("supplylens_demo_invoices", JSON.stringify(updatedInvoices));
+          localStorage.setItem("supplylens_commercial_settled", "true");
+        } catch {}
+      }
       setIsProcessingPayment(false);
       setPaymentSuccess(true);
     }, 900);

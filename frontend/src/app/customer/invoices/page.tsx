@@ -94,13 +94,26 @@ export default function CustomerInvoicesPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => setSelectedTaxInvoicePreset("success_fee")}
-            className="self-start sm:self-auto flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-blue-500/20 cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 text-cyan-200" />
-            <span>Generate Official Bill & Tax Invoice</span>
-          </button>
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => {
+                const pending = invoices.find((i) => i.status !== "paid") || invoices[0];
+                setSelectedInvoiceForPayment(pending);
+              }}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-emerald-500/20 cursor-pointer"
+            >
+              <CreditCard className="w-4 h-4 text-emerald-200" />
+              <span>Launch Payment Gateway</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedTaxInvoicePreset("success_fee")}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-blue-500/20 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-200" />
+              <span>Generate Official Bill & Tax Invoice</span>
+            </button>
+          </div>
         </div>
 
         {/* Fee Policy Explanation Banner */}
@@ -137,14 +150,14 @@ export default function CustomerInvoicesPage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-lg">
-                      {inv.invoice_number}
+                      {inv.invoice_number || `SL-${inv.id.slice(-6).toUpperCase()}`}
                     </span>
                     <h3 className="text-base font-bold text-slate-900">
                       5% Platform Success Fee Invoice
                     </h3>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <span>Issued {inv.issue_date ? new Date(inv.issue_date).toLocaleDateString() : "Recently"}</span>
+                    <span>Issued {inv.issue_date || inv.issued_date ? new Date(inv.issue_date || inv.issued_date || "").toLocaleDateString() : "Recently"}</span>
                     <span className="text-slate-300">·</span>
                     <span>Due: {inv.due_date ? new Date(inv.due_date).toLocaleDateString() : "Net-15 Days"}</span>
                   </div>
@@ -168,21 +181,21 @@ export default function CustomerInvoicesPage() {
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
                   <span className="text-[10px] text-slate-400 block uppercase font-semibold">Base Service Fee (5%)</span>
                   <span className="font-mono font-bold text-slate-800 text-sm">
-                    {inv.currency} {inv.base_fee_amount?.toLocaleString()}
+                    {inv.currency} {(inv.base_fee_amount || inv.subtotal || Math.round((inv.total_amount || 0) / 1.18))?.toLocaleString()}
                   </span>
                 </div>
 
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
                   <span className="text-[10px] text-slate-400 block uppercase font-semibold">18% GST Tax</span>
                   <span className="font-mono font-bold text-slate-800 text-sm">
-                    {inv.currency} {inv.tax_amount?.toLocaleString()}
+                    {inv.currency} {(inv.tax_amount || Math.round(((inv.base_fee_amount || inv.subtotal || 0) * 0.18)))?.toLocaleString()}
                   </span>
                 </div>
 
                 <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-200/60">
                   <span className="text-[10px] text-blue-600 block uppercase font-semibold">Total Invoice Amount</span>
                   <span className="font-mono font-bold text-blue-700 text-sm">
-                    {inv.currency} {inv.total_amount?.toLocaleString()}
+                    {inv.currency} {(inv.total_amount || Math.round(((inv.base_fee_amount || inv.subtotal || 0) * 1.18)))?.toLocaleString()}
                   </span>
                 </div>
 
@@ -205,13 +218,21 @@ export default function CustomerInvoicesPage() {
                   <span>View Official Bill & Tax Invoice</span>
                 </button>
 
-                {inv.status !== "paid" && (
+                {inv.status !== "paid" ? (
                   <button
                     onClick={() => setSelectedInvoiceForPayment(inv)}
-                    className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-700 transition-colors flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
                   >
-                    <CreditCard className="w-3.5 h-3.5" />
-                    Pay {inv.currency} {inv.total_amount?.toLocaleString()}
+                    <CreditCard className="w-4 h-4 text-cyan-200" />
+                    <span>Pay Fee via Gateway ({inv.currency} {(inv.total_amount || Math.round(((inv.base_fee_amount || inv.subtotal || 0) * 1.18)))?.toLocaleString()})</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setSelectedInvoiceForPayment(inv)}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                  >
+                    <CreditCard className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Re-open Gateway</span>
                   </button>
                 )}
               </div>
@@ -227,11 +248,21 @@ export default function CustomerInvoicesPage() {
         invoice={selectedInvoiceForPayment}
         onPaymentSuccess={(res) => {
           if (selectedInvoiceForPayment) {
-            setInvoices((prev) =>
-              prev.map((inv) =>
-                inv.id === selectedInvoiceForPayment.id ? { ...inv, status: "paid" as any } : inv
-              )
+            const updated = invoices.map((inv) =>
+              inv.id === selectedInvoiceForPayment.id
+                ? {
+                    ...inv,
+                    status: "paid" as any,
+                    paid_at: new Date().toISOString(),
+                    payment_method: res?.gateway || "Razorpay Standard Gateway",
+                    payment_reference: res?.payment_reference || `rzp_pay_${Date.now()}`,
+                  }
+                : inv
             );
+            setInvoices(updated);
+            try {
+              localStorage.setItem("supplylens_demo_invoices", JSON.stringify(updated));
+            } catch {}
             showToast(`Payment settled! Invoice ${selectedInvoiceForPayment.invoice_number} is now marked as Paid.`);
           }
         }}

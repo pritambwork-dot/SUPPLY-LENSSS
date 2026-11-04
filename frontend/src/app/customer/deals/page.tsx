@@ -32,7 +32,19 @@ export default function CustomerDealsPage() {
       setIsLoading(true);
       try {
         const list = await api.monetization.deals.list("biz-001");
-        setDeals(Array.isArray(list) ? list : []);
+        const rawDeals = Array.isArray(list) ? list : [];
+        if (typeof window !== "undefined") {
+          try {
+            const settled = JSON.parse(localStorage.getItem("supplylens_settled_deals") || "[]");
+            if (Array.isArray(settled) && settled.length > 0) {
+              setDeals(
+                rawDeals.map((d: any) => (settled.includes(d.id) ? { ...d, status: "settled" } : d))
+              );
+              return;
+            }
+          } catch {}
+        }
+        setDeals(rawDeals);
       } catch (err) {
         console.error("Error loading deals:", err);
       } finally {
@@ -201,6 +213,15 @@ export default function CustomerDealsPage() {
                 d.id === selectedDealForPayment.id ? { ...d, status: "settled" } : d
               )
             );
+            if (typeof window !== "undefined") {
+              try {
+                const settled = JSON.parse(localStorage.getItem("supplylens_settled_deals") || "[]");
+                if (!settled.includes(selectedDealForPayment.id)) {
+                  settled.push(selectedDealForPayment.id);
+                  localStorage.setItem("supplylens_settled_deals", JSON.stringify(settled));
+                }
+              } catch {}
+            }
           }
         }}
         onViewTaxInvoice={(preset) => {

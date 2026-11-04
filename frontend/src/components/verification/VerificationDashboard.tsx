@@ -248,12 +248,23 @@ export const VerificationDashboard: React.FC<VerificationDashboardProps> = ({ on
             >
               {/* Left Details */}
               <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600 font-bold shrink-0">
+                <button
+                  type="button"
+                  onClick={() => onSelectSupplier?.(supplier.id)}
+                  className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600 font-bold shrink-0 hover:bg-blue-100 transition-colors cursor-pointer"
+                  title="View Supplier Profile"
+                >
                   <Building2 className="w-5 h-5" />
-                </div>
+                </button>
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-bold text-slate-900">{supplier.name}</h3>
+                    <button
+                      type="button"
+                      onClick={() => onSelectSupplier?.(supplier.id)}
+                      className="text-sm font-bold text-slate-900 hover:text-blue-600 transition-colors cursor-pointer text-left"
+                    >
+                      {supplier.name}
+                    </button>
                     <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
                       {supplier.badge_text}
                     </span>

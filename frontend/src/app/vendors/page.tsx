@@ -38,6 +38,9 @@ import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackgr
 import { initialBusinessProfile } from "@/data/mockData";
 import { LayoutDashboard, FileText, Bell, Check, ChevronDown, ChevronLeft } from "lucide-react";
 import { LiveDateTime } from "@/components/common/LiveDateTime";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { authService, AuthUser } from "@/lib/auth";
+import { UserProfileModal } from "@/components/profile/UserProfileModal";
 
 export default function VendorDirectoryPage() {
   const router = useRouter();
@@ -58,9 +61,21 @@ export default function VendorDirectoryPage() {
   const [selectedSupplierForRfq, setSelectedSupplierForRfq] = useState<Supplier | null>(null);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [businessProfile] = useState<BusinessProfile>(initialBusinessProfile);
+
+  useEffect(() => {
+    authService.getSessionUser().then((user) => {
+      if (user && user.id) {
+        setCurrentUser(user);
+      } else {
+        router.replace("/login?redirect=/vendors");
+      }
+    });
+  }, [router]);
 
   // Fetch initial suppliers from backend API
   useEffect(() => {
@@ -219,7 +234,14 @@ export default function VendorDirectoryPage() {
         router.push("/customer/deals");
         break;
       case "billing":
-        router.push("/customer/invoices");
+        router.push("/billing");
+        break;
+      case "economics":
+      case "optimizer":
+        router.push("/customer/requirements");
+        break;
+      case "revenue":
+        router.push("/customer/deals");
         break;
       case "landing":
         router.push("/landing");
@@ -230,17 +252,28 @@ export default function VendorDirectoryPage() {
     }
   };
 
+  const displayUser = currentUser
+    ? {
+        name: currentUser.name || "Hossein",
+        handle: `@${(currentUser.name || "user680523").toLowerCase().replace(/\s+/g, "")}`,
+      }
+    : {
+        name: "Hossein",
+        handle: "@user680523",
+      };
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
-      {/* Sleek Left Navigation Rail */}
-      <LeftNavRail
-        activeTab="suppliers"
-        onTabChange={handleTabChange}
-        onOpenAssistant={() => setIsAssistantOpen(true)}
-        onOpenAuth={() => {}}
-        isLoggedIn={true}
-        theme="light"
-      />
+    <AuthGuard>
+      <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
+        {/* Sleek Left Navigation Rail */}
+        <LeftNavRail
+          activeTab="suppliers"
+          onTabChange={handleTabChange}
+          onOpenAssistant={() => setIsAssistantOpen(true)}
+          onOpenAuth={() => setIsProfileModalOpen(true)}
+          isLoggedIn={true}
+          theme="light"
+        />
 
       {/* Main Cockpit Content Area */}
       <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative p-3 sm:p-5 flex flex-col gap-4 font-sans antialiased">
@@ -317,7 +350,7 @@ export default function VendorDirectoryPage() {
             </Link>
 
             <Link
-              href="/customer/invoices"
+              href="/billing"
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               <span className="text-emerald-600 font-bold">$</span>
@@ -365,19 +398,23 @@ export default function VendorDirectoryPage() {
 
             <LiveDateTime />
 
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 shadow-xs">
+            <button
+              onClick={() => setIsProfileModalOpen(true)}
+              className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
+            >
               <div className="w-7 h-7 rounded-full bg-blue-600 p-0.5 shadow-xs flex items-center justify-center text-white text-xs font-bold">
-                H
+                {displayUser.name.charAt(0)}
               </div>
               <div className="flex flex-col text-left">
                 <span className="text-[11px] font-bold text-slate-900 leading-tight">
-                  Hossein
+                  {displayUser.name}
                 </span>
                 <span className="text-[9px] text-slate-400 leading-none">
-                  @user680523
+                  {displayUser.handle}
                 </span>
               </div>
-            </div>
+              <ChevronDown className="w-3 h-3 text-slate-400" />
+            </button>
           </div>
         </header>
 
@@ -696,20 +733,32 @@ export default function VendorDirectoryPage() {
         }}
       />
 
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-semibold shadow-xl border border-slate-800 flex items-center gap-2"
-          >
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            {toastMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        {/* Toast Notification */}
+        <AnimatePresence>
+          {toastMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-semibold shadow-xl border border-slate-800 flex items-center gap-2"
+            >
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              {toastMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* User Profile Modal */}
+        <UserProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          user={currentUser}
+          onSignOut={() => {
+            setCurrentUser(null);
+            setIsProfileModalOpen(false);
+          }}
+        />
+      </div>
+    </AuthGuard>
   );
 }

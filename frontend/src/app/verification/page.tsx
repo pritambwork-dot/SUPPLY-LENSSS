@@ -29,6 +29,7 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
 import { BusinessProfile, Supplier } from "@/types";
+import { api } from "@/services/api";
 import { LiveDateTime } from "@/components/common/LiveDateTime";
 
 export default function VerificationDeskPage() {
@@ -74,7 +75,7 @@ export default function VerificationDeskPage() {
         router.push("/customer/deals");
         break;
       case "billing":
-        router.push("/customer/invoices");
+        router.push("/billing");
         break;
       case "landing":
         router.push("/landing");
@@ -83,6 +84,27 @@ export default function VerificationDeskPage() {
         router.push("/dashboard");
         break;
     }
+  };
+
+  const [savedSupplierIds, setSavedSupplierIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    api.suppliers.getSaved().then((saved) => {
+      if (Array.isArray(saved)) {
+        setSavedSupplierIds(saved.map((item: any) => item.supplier_id || item.supplierId));
+      }
+    }).catch(() => {});
+  }, []);
+
+  const handleToggleSaveSupplier = async (supplier: Supplier) => {
+    try {
+      const res: any = await api.suppliers.save(supplier.id);
+      if (res?.is_saved) {
+        setSavedSupplierIds((prev) => [...prev, supplier.id]);
+      } else {
+        setSavedSupplierIds((prev) => prev.filter((id) => id !== supplier.id));
+      }
+    } catch {}
   };
 
   const displayUser = currentUser
@@ -184,7 +206,7 @@ export default function VerificationDeskPage() {
             </Link>
 
             <Link
-              href="/customer/invoices"
+              href="/billing"
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               <span className="text-emerald-600 font-bold">$</span>
@@ -282,8 +304,8 @@ export default function VerificationDeskPage() {
             router.push("/customer/comparisons");
           }}
           isCompared={false}
-          onToggleSave={() => {}}
-          isSaved={false}
+          onToggleSave={handleToggleSaveSupplier}
+          isSaved={savedSupplierIds.includes(selectedSupplierForModal.id)}
         />
       )}
 

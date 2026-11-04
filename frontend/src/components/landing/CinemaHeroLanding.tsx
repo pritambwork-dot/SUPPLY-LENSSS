@@ -188,7 +188,7 @@ const galleryScreens = [
     subtitle: "End-to-end freight, tariff, duty, and currency modeling",
     description: "Simulates full delivery landed costs across ocean, air, and ground lanes with automatic HS code tariff lookups and volume tiered discounts.",
     image: "/images/supplylens-economics-preview.png",
-    route: "/customer/deals",
+    route: "/customer/requirements",
   },
   {
     id: "billing",

@@ -84,6 +84,27 @@ export default function DashboardPage() {
     });
   }, []);
 
+  const [savedSupplierIds, setSavedSupplierIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    api.suppliers.getSaved().then((saved) => {
+      if (Array.isArray(saved)) {
+        setSavedSupplierIds(saved.map((item: any) => item.supplier_id || item.supplierId));
+      }
+    }).catch(() => {});
+  }, []);
+
+  const handleToggleSaveSupplier = async (supplier: Supplier) => {
+    try {
+      const res: any = await api.suppliers.save(supplier.id);
+      if (res?.is_saved) {
+        setSavedSupplierIds((prev) => [...prev, supplier.id]);
+      } else {
+        setSavedSupplierIds((prev) => prev.filter((id) => id !== supplier.id));
+      }
+    } catch {}
+  };
+
   const handleTabChange = (tab: string) => {
     switch (tab) {
       case "dashboard":
@@ -93,7 +114,7 @@ export default function DashboardPage() {
         router.push("/customer/requirements");
         break;
       case "suppliers":
-        router.push("/customer/saved-vendors");
+        router.push("/vendors");
         break;
       case "compare":
         router.push("/customer/comparisons");
@@ -106,13 +127,13 @@ export default function DashboardPage() {
         break;
       case "economics":
       case "optimizer":
-        router.push("/customer/sourcing-plan");
+        router.push("/customer/requirements");
         break;
       case "billing":
         router.push("/billing");
         break;
       case "revenue":
-        router.push("/admin/revenue");
+        router.push("/customer/deals");
         break;
       case "landing":
         router.push("/");
@@ -179,8 +200,8 @@ export default function DashboardPage() {
               router.push("/customer/comparisons");
             }}
             isCompared={false}
-            onToggleSave={() => {}}
-            isSaved={false}
+            onToggleSave={handleToggleSaveSupplier}
+            isSaved={savedSupplierIds.includes(selectedSupplierForModal.id)}
           />
         )}
 

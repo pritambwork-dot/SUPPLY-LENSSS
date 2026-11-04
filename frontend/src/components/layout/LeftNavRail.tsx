@@ -13,7 +13,8 @@ import {
   Receipt,
   ShieldCheck,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  DollarSign
 } from "lucide-react";
 
 export interface LeftNavRailProps {
@@ -39,7 +40,7 @@ export const LeftNavRail: React.FC<LeftNavRailProps> = ({
 }) => {
   const isDark = theme === "dark";
 
-  // Streamlined 6 core navigation items (BOM & Requirements unified, Deals & Revenue unified)
+  // Streamlined 7 core navigation items
   const navItems: Array<{
     key: string;
     label: string;
@@ -51,7 +52,8 @@ export const LeftNavRail: React.FC<LeftNavRailProps> = ({
     { key: "suppliers", label: "Supplier Directory", icon: Building2, href: "/vendors" },
     { key: "compare", label: "Compare Matrix", icon: GitCompare, href: "/customer/comparisons" },
     { key: "verification", label: "10-D Verification", icon: ShieldCheck, href: "/verification" },
-    { key: "deals", label: "Deals & Revenue Hub", icon: Receipt, href: "/customer/deals" },
+    { key: "deals", label: "Deals & Contracts", icon: Receipt, href: "/customer/deals" },
+    { key: "billing", label: "Commercial Billing", icon: DollarSign, href: "/billing" },
   ];
 
   if (isCollapsed) {

@@ -114,13 +114,13 @@ export default function CustomerPortalLayout({
         router.push("/customer/requirements");
         break;
       case "suppliers":
-        router.push("/customer/saved-vendors");
+        router.push("/vendors");
         break;
       case "compare":
         router.push("/customer/comparisons");
         break;
       case "verification":
-        router.push("/customer/saved-vendors");
+        router.push("/verification");
         break;
       case "deals":
         router.push("/customer/deals");
@@ -130,7 +130,7 @@ export default function CustomerPortalLayout({
         router.push("/customer/requirements");
         break;
       case "billing":
-        router.push("/customer/invoices");
+        router.push("/billing");
         break;
       case "revenue":
         router.push("/customer/deals");
@@ -236,7 +236,7 @@ export default function CustomerPortalLayout({
             </Link>
 
             <Link
-              href="/customer/saved-vendors"
+              href="/verification"
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -252,7 +252,7 @@ export default function CustomerPortalLayout({
             </Link>
 
             <Link
-              href="/customer/invoices"
+              href="/billing"
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/70 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               <span className="text-emerald-600 font-bold">$</span>
@@ -300,7 +300,7 @@ export default function CustomerPortalLayout({
           <div className="flex items-center gap-2 self-end lg:self-auto">
             {/* Audits Pill */}
             <Link
-              href="/customer/saved-vendors"
+              href="/verification"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:border-blue-300 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-xs"
             >
               <Bell className="w-3.5 h-3.5 text-blue-600" />

@@ -23,6 +23,7 @@ import { SupplierProfileModal } from "@/components/suppliers/SupplierProfileModa
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { authService, AuthUser } from "@/lib/auth";
+import { api } from "@/services/api";
 import { verifiedSuppliers } from "@/data/mockData";
 import { Supplier } from "@/types";
 import { LiveDateTime } from "@/components/common/LiveDateTime";
@@ -36,6 +37,7 @@ export default function BillingHubPage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [savedSupplierIds, setSavedSupplierIds] = useState<string[]>([]);
 
   useEffect(() => {
     authService.getSessionUser().then((user) => {
@@ -45,6 +47,12 @@ export default function BillingHubPage() {
         router.replace("/login?redirect=/billing");
       }
     });
+
+    api.suppliers.getSaved().then((saved) => {
+      if (Array.isArray(saved)) {
+        setSavedSupplierIds(saved.map((item: any) => item.supplier_id || item.supplierId));
+      }
+    }).catch(() => {});
   }, [router]);
 
   const handleTabChange = (tab: string) => {
@@ -56,7 +64,7 @@ export default function BillingHubPage() {
         router.push("/customer/requirements");
         break;
       case "suppliers":
-        router.push("/customer/saved-vendors");
+        router.push("/vendors");
         break;
       case "compare":
         router.push("/customer/comparisons");
@@ -70,12 +78,32 @@ export default function BillingHubPage() {
       case "billing":
         router.push("/billing");
         break;
+      case "economics":
+      case "optimizer":
+        router.push("/customer/requirements");
+        break;
+      case "revenue":
+        router.push("/customer/deals");
+        break;
       case "landing":
         router.push("/");
         break;
       default:
         router.push("/dashboard");
         break;
+    }
+  };
+
+  const handleToggleSaveSupplier = async (supplier: Supplier) => {
+    try {
+      const res: any = await api.suppliers.save(supplier.id);
+      if (res && res.is_saved) {
+        setSavedSupplierIds((prev) => [...prev, supplier.id]);
+      } else {
+        setSavedSupplierIds((prev) => prev.filter((id) => id !== supplier.id));
+      }
+    } catch (err) {
+      console.error("Failed to toggle save supplier", err);
     }
   };
 
@@ -266,6 +294,8 @@ export default function BillingHubPage() {
               setSelectedSupplierForModal(null);
               router.push("/customer/comparisons");
             }}
+            onToggleSave={handleToggleSaveSupplier}
+            isSaved={savedSupplierIds.includes(selectedSupplierForModal.id)}
           />
         )}
 

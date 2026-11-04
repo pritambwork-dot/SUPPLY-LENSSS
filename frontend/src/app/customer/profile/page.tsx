@@ -55,14 +55,11 @@ export default function CustomerBusinessProfilePage() {
       setIsLoading(true);
       try {
         const user = await authService.getSessionUser();
-        setCurrentUser(user || {
-          id: "usr-demo-001",
-          email: "hossein@supplylens.ai",
-          name: "Hossein",
-          role: "Lead Sourcing Director",
-          onboarding_status: "completed",
-          active_step: 6,
-        });
+        if (user && user.id) {
+          setCurrentUser(user);
+        } else {
+          setCurrentUser(null);
+        }
 
         const p: any = await api.business.getProfile("biz-001");
         if (p) {

@@ -25,6 +25,7 @@ import {
   FileText,
 } from "lucide-react";
 import { api } from "@/services/api";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 interface MessageItem {
   id: string;
@@ -350,7 +351,8 @@ export default function AssistantPage() {
   );
 
   return (
-    <div className="flex h-screen bg-slate-50 font-sans text-slate-800 antialiased overflow-hidden">
+    <AuthGuard>
+      <div className="flex h-screen bg-slate-50 font-sans text-slate-800 antialiased overflow-hidden">
       
       {/* 1. LEFT SIDEBAR: THREADS & TOKEN METER */}
       <aside className="w-80 bg-white border-r border-slate-200/90 flex flex-col h-full shrink-0">
@@ -635,5 +637,6 @@ export default function AssistantPage() {
 
       </main>
     </div>
+    </AuthGuard>
   );
 }

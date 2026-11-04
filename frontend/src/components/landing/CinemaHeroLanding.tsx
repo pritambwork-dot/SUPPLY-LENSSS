@@ -25,6 +25,7 @@ import {
   Receipt,
 } from "lucide-react";
 import { verifiedSuppliers } from "@/data/mockData";
+import { authService, AuthUser } from "@/lib/auth";
 
 // ============================================================================
 // 1. FADE-IN COMPONENT (As specified: configurable delay & duration)
@@ -204,10 +205,16 @@ const galleryScreens = [
 // 4. MAIN CINEMA HERO LANDING PAGE
 // ============================================================================
 export const CinemaHeroLanding: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [activeGalleryTab, setActiveGalleryTab] = useState<number>(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
   const [lightboxImage, setLightboxImage] = useState<string>("/images/supplylens-dashboard-preview.png");
   const [lightboxTitle, setLightboxTitle] = useState<string>("SupplyLens Sourcing Command Center");
+
+  useEffect(() => {
+    const user = authService.getStoredUser();
+    setCurrentUser(user);
+  }, []);
 
   const openLightbox = (imgSrc: string, title: string) => {
     setLightboxImage(imgSrc);
@@ -247,38 +254,81 @@ export const CinemaHeroLanding: React.FC = () => {
             {/* Center: Links (hidden on mobile, visible md+) */}
             <div className="hidden md:flex items-center gap-8 text-sm text-gray-300">
               <Link
-                href="/vendors"
+                href={currentUser ? "/vendors" : "/login?redirect=/vendors"}
                 className="hover:text-white transition-colors"
               >
                 Global Directory
               </Link>
               <Link
-                href="/verification"
+                href={currentUser ? "/verification" : "/login?redirect=/verification"}
                 className="hover:text-white transition-colors"
               >
                 10-D Verification
               </Link>
               <Link
-                href="/customer/deals"
+                href={currentUser ? "/customer/deals" : "/login?redirect=/customer/deals"}
                 className="hover:text-white transition-colors"
               >
                 Deals & RFQ
               </Link>
               <Link
-                href="/dashboard"
+                href={currentUser ? "/dashboard" : "/login?redirect=/dashboard"}
                 className="hover:text-white transition-colors"
               >
                 Intelligence
               </Link>
             </div>
 
-            {/* Right: "Start a Chat" button */}
-            <Link
-              href="/assistant"
-              className="bg-white text-black px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
-            >
-              Start a Chat
-            </Link>
+            {/* Right: Auth-aware action buttons */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {currentUser ? (
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-medium text-white transition-colors"
+                  >
+                    <div className="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-[10px]">
+                      {currentUser.name.charAt(0)}
+                    </div>
+                    <span className="hidden sm:inline">{currentUser.name}</span>
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="bg-white text-black px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>Dashboard</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      await authService.signOut();
+                      setCurrentUser(null);
+                      window.location.reload();
+                    }}
+                    className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer px-1.5 py-1"
+                    title="Sign Out"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="text-gray-300 hover:text-white text-xs sm:text-sm font-medium px-3 py-1.5 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/login?redirect=/dashboard"
+                    className="bg-white text-black px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>Launch Workspace</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
         </header>
 
@@ -303,16 +353,16 @@ export const CinemaHeroLanding: React.FC = () => {
               <FadeIn delay={1200} duration={1000}>
                 <div className="flex flex-wrap gap-4 items-center">
                   <Link
-                    href="/assistant"
+                    href={currentUser ? "/assistant" : "/login?redirect=/assistant"}
                     className="bg-white text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors inline-flex items-center justify-center text-center text-sm md:text-base"
                   >
-                    Start a Chat
+                    {currentUser ? "Start a Chat" : "Sign In to Access"}
                   </Link>
                   <Link
-                    href="/dashboard"
+                    href={currentUser ? "/dashboard" : "/login?redirect=/dashboard"}
                     className="liquid-glass border border-white/20 text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-black transition-all inline-flex items-center justify-center text-center text-sm md:text-base"
                   >
-                    Explore Now
+                    {currentUser ? "Explore Now" : "Launch Workspace"}
                   </Link>
                 </div>
               </FadeIn>
@@ -377,10 +427,10 @@ export const CinemaHeroLanding: React.FC = () => {
 
               <div className="flex flex-wrap gap-3 shrink-0">
                 <Link
-                  href="/dashboard"
+                  href={currentUser ? "/dashboard" : "/login?redirect=/dashboard"}
                   className="bg-white text-black px-6 py-3 rounded-xl font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2 text-sm"
                 >
-                  <span>Launch Live Dashboard</span>
+                  <span>{currentUser ? "Launch Live Dashboard" : "Sign In to Access"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <button
@@ -509,10 +559,10 @@ export const CinemaHeroLanding: React.FC = () => {
                       <Maximize2 className="w-4 h-4" />
                     </button>
                     <Link
-                      href={galleryScreens[activeGalleryTab].route}
+                      href={currentUser ? galleryScreens[activeGalleryTab].route : `/login?redirect=${encodeURIComponent(galleryScreens[activeGalleryTab].route)}`}
                       className="px-4 py-2 rounded-xl bg-white text-black text-xs font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-1.5"
                     >
-                      <span>Open in App</span>
+                      <span>{currentUser ? "Open in App" : "Sign In to Access"}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
@@ -580,7 +630,7 @@ export const CinemaHeroLanding: React.FC = () => {
                   />
                 </div>
                 <Link
-                  href="/verification"
+                  href={currentUser ? "/verification" : "/login?redirect=/verification"}
                   className="text-white hover:text-gray-300 text-xs font-medium inline-flex items-center gap-1.5"
                 >
                   <span>Inspect Verification Process</span>
@@ -615,7 +665,7 @@ export const CinemaHeroLanding: React.FC = () => {
                   />
                 </div>
                 <Link
-                  href="/customer/deals"
+                  href={currentUser ? "/customer/deals" : "/login?redirect=/customer/deals"}
                   className="text-white hover:text-gray-300 text-xs font-medium inline-flex items-center gap-1.5"
                 >
                   <span>Simulate Landed Economics</span>
@@ -650,7 +700,7 @@ export const CinemaHeroLanding: React.FC = () => {
                   />
                 </div>
                 <Link
-                  href="/billing"
+                  href={currentUser ? "/billing" : "/login?redirect=/billing"}
                   className="text-white hover:text-gray-300 text-xs font-medium inline-flex items-center gap-1.5"
                 >
                   <span>View Commercial Settlement</span>
@@ -672,7 +722,7 @@ export const CinemaHeroLanding: React.FC = () => {
                 </h3>
               </div>
               <Link
-                href="/vendors"
+                href={currentUser ? "/vendors" : "/login?redirect=/vendors"}
                 className="mt-4 md:mt-0 text-sm text-gray-300 hover:text-white transition-colors inline-flex items-center gap-2"
               >
                 <span>Explore all 61 factories in 16 countries</span>
@@ -707,7 +757,7 @@ export const CinemaHeroLanding: React.FC = () => {
                       From ${supplier.products[0]?.quotedPrice || 0.10} / {supplier.products[0]?.unit || "unit"}
                     </span>
                     <Link
-                      href={`/vendors/${supplier.id}`}
+                      href={currentUser ? `/vendors/${supplier.id}` : `/login?redirect=${encodeURIComponent(`/vendors/${supplier.id}`)}`}
                       className="text-xs text-white hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Factory</span>
@@ -752,10 +802,10 @@ export const CinemaHeroLanding: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Link
-                  href="/dashboard"
+                  href={currentUser ? "/dashboard" : "/login?redirect=/dashboard"}
                   className="px-3 py-1 rounded-lg bg-white text-black text-xs font-semibold hover:bg-gray-100 transition-colors"
                 >
-                  Open Live App
+                  {currentUser ? "Open Live App" : "Sign In to Access"}
                 </Link>
                 <button
                   onClick={() => setIsLightboxOpen(false)}

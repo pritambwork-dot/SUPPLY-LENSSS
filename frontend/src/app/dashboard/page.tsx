@@ -7,6 +7,7 @@ import { ModernDashboard } from "@/components/dashboard/ModernDashboard";
 import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { SupplierProfileModal } from "@/components/suppliers/SupplierProfileModal";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 import { authService, AuthUser } from "@/lib/auth";
 import { api } from "@/services/api";
 import {
@@ -28,16 +29,14 @@ export default function DashboardPage() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    // 1. Load user session
+    // 1. Load user session strictly
     authService.getSessionUser().then((user) => {
-      const activeUser: AuthUser = user || {
-        id: "usr-demo-001",
-        email: "hossein@supplylens.ai",
-        name: "Hossein",
-        role: "Lead Sourcing Director",
-        onboarding_status: "completed",
-        active_step: 6,
-      };
+      if (!user || !user.id) {
+        // Without authentication nobody can access dashboard
+        router.replace("/login?redirect=/dashboard");
+        return;
+      }
+      const activeUser: AuthUser = user;
       setCurrentUser(activeUser);
 
       // 2. Check local saved profile
@@ -137,82 +136,84 @@ export default function DashboardPage() {
       };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
-      {/* Sleek Left Navigation Rail */}
-      <LeftNavRail
-        activeTab="dashboard"
-        onTabChange={handleTabChange}
-        onOpenAssistant={() => setIsAssistantOpen(true)}
-        onOpenAuth={() => setIsProfileModalOpen(true)}
-        isLoggedIn={true}
-        theme="light"
-        isCollapsed={isExpanded}
-        onToggleCollapse={() => setIsExpanded(!isExpanded)}
-      />
+    <AuthGuard>
+      <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
+        {/* Sleek Left Navigation Rail */}
+        <LeftNavRail
+          activeTab="dashboard"
+          onTabChange={handleTabChange}
+          onOpenAssistant={() => setIsAssistantOpen(true)}
+          onOpenAuth={() => setIsProfileModalOpen(true)}
+          isLoggedIn={true}
+          theme="light"
+          isCollapsed={isExpanded}
+          onToggleCollapse={() => setIsExpanded(!isExpanded)}
+        />
 
-      {/* Main Cockpit Content Area */}
-      <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative">
-        <ModernDashboard
+        {/* Main Cockpit Content Area */}
+        <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative">
+          <ModernDashboard
+            businessProfile={businessProfile}
+            suppliers={suppliers}
+            onOpenAssistant={() => setIsAssistantOpen(true)}
+            onOpenSupplierModal={(sup) => setSelectedSupplierForModal(sup)}
+            onNavigateTab={handleTabChange}
+            onOpenLoginModal={() => setIsProfileModalOpen(true)}
+            onOpenProfileModal={() => setIsProfileModalOpen(true)}
+            user={displayUser}
+            onPerformLiveSearch={(query) => {
+              router.push(`/vendors?search=${encodeURIComponent(query)}`);
+            }}
+            isExpanded={isExpanded}
+            onToggleExpand={() => setIsExpanded(!isExpanded)}
+          />
+        </main>
+
+        {/* Supplier Profile Evidence Dossier Modal */}
+        {selectedSupplierForModal && (
+          <SupplierProfileModal
+            supplier={selectedSupplierForModal}
+            onClose={() => setSelectedSupplierForModal(null)}
+            onToggleCompare={() => {
+              setSelectedSupplierForModal(null);
+              router.push("/customer/comparisons");
+            }}
+            isCompared={false}
+            onToggleSave={() => {}}
+            isSaved={false}
+          />
+        )}
+
+        {/* Full AI Assistant Drawer */}
+        <AIAssistantDrawer
+          isOpen={isAssistantOpen}
+          onClose={() => setIsAssistantOpen(false)}
           businessProfile={businessProfile}
           suppliers={suppliers}
-          onOpenAssistant={() => setIsAssistantOpen(true)}
-          onOpenSupplierModal={(sup) => setSelectedSupplierForModal(sup)}
-          onNavigateTab={handleTabChange}
-          onOpenLoginModal={() => setIsProfileModalOpen(true)}
-          onOpenProfileModal={() => setIsProfileModalOpen(true)}
-          user={displayUser}
-          onPerformLiveSearch={(query) => {
-            router.push(`/vendors?search=${encodeURIComponent(query)}`);
+          onSelectSupplierById={(id) => {
+            const sup = suppliers.find((s) => s.id === id);
+            if (sup) {
+              setIsAssistantOpen(false);
+              setSelectedSupplierForModal(sup);
+            }
           }}
-          isExpanded={isExpanded}
-          onToggleExpand={() => setIsExpanded(!isExpanded)}
-        />
-      </main>
-
-      {/* Supplier Profile Evidence Dossier Modal */}
-      {selectedSupplierForModal && (
-        <SupplierProfileModal
-          supplier={selectedSupplierForModal}
-          onClose={() => setSelectedSupplierForModal(null)}
-          onToggleCompare={() => {
-            setSelectedSupplierForModal(null);
-            router.push("/customer/comparisons");
-          }}
-          isCompared={false}
-          onToggleSave={() => {}}
-          isSaved={false}
-        />
-      )}
-
-      {/* Full AI Assistant Drawer */}
-      <AIAssistantDrawer
-        isOpen={isAssistantOpen}
-        onClose={() => setIsAssistantOpen(false)}
-        businessProfile={businessProfile}
-        suppliers={suppliers}
-        onSelectSupplierById={(id) => {
-          const sup = suppliers.find((s) => s.id === id);
-          if (sup) {
+          onNavigateTab={(tab) => {
             setIsAssistantOpen(false);
-            setSelectedSupplierForModal(sup);
-          }
-        }}
-        onNavigateTab={(tab) => {
-          setIsAssistantOpen(false);
-          handleTabChange(tab);
-        }}
-      />
+            handleTabChange(tab);
+          }}
+        />
 
-      {/* User Profile & Sign Out Modal */}
-      <UserProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        user={currentUser}
-        onSignOut={() => {
-          setCurrentUser(null);
-          setIsProfileModalOpen(false);
-        }}
-      />
-    </div>
+        {/* User Profile & Sign Out Modal */}
+        <UserProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          user={currentUser}
+          onSignOut={() => {
+            setCurrentUser(null);
+            setIsProfileModalOpen(false);
+          }}
+        />
+      </div>
+    </AuthGuard>
   );
 }

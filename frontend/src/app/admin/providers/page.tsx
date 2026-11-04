@@ -24,6 +24,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { api } from "@/services/api";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 export default function AdminProvidersPage() {
   const [providers, setProviders] = useState<any[]>([]);
@@ -80,7 +81,8 @@ export default function AdminProvidersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/60 pb-20">
+    <AuthGuard>
+      <div className="min-h-screen bg-slate-50/60 pb-20">
       {/* Top Header */}
       <div className="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
@@ -472,5 +474,6 @@ export default function AdminProvidersPage() {
         )}
       </div>
     </div>
+    </AuthGuard>
   );
 }

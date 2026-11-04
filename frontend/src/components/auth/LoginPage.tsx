@@ -18,6 +18,7 @@ import {
   Building2
 } from "lucide-react";
 import { SpatialCard } from "@/components/3d/SpatialCard";
+import { authService } from "@/lib/auth";
 
 interface LoginPageProps {
   onSuccess?: (user: { name: string; email: string; role: string }) => void;
@@ -63,20 +64,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           email: "guest@supplylens.ai",
           role: "Lead Sourcing Director",
         };
-        if (typeof window !== "undefined") {
-          localStorage.setItem("supplylens_user", JSON.stringify(guestUser));
-          localStorage.setItem(
-            "supplylens_auth_user",
-            JSON.stringify({
-              id: "usr-guest",
-              email: "guest@supplylens.ai",
-              name: "Guest",
-              role: "Lead Sourcing Director",
-              onboarding_status: "completed",
-              active_step: 6,
-            })
-          );
-        }
+        authService.setStoredUser({
+          id: "usr-guest",
+          email: "guest@supplylens.ai",
+          name: "Guest",
+          role: "Lead Sourcing Director",
+          onboarding_status: "completed",
+          active_step: 6,
+        });
         if (onSuccess) {
           onSuccess(guestUser);
         }
@@ -92,9 +87,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         email: email || "guest@supplylens.ai",
         role: "Sourcing Director",
       };
-      if (typeof window !== "undefined") {
-        localStorage.setItem("supplylens_user", JSON.stringify(userPayload));
-      }
+      authService.setStoredUser({
+        id: `usr-${Date.now()}`,
+        email: userPayload.email,
+        name: userPayload.name,
+        role: userPayload.role,
+        onboarding_status: "completed",
+        active_step: 6,
+      });
       if (onSuccess) {
         onSuccess(userPayload);
       }
@@ -112,20 +112,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         email: "guest@supplylens.ai",
         role: "Lead Sourcing Director",
       };
-      if (typeof window !== "undefined") {
-        localStorage.setItem("supplylens_user", JSON.stringify(demoUser));
-        localStorage.setItem(
-          "supplylens_auth_user",
-          JSON.stringify({
-            id: "usr-guest",
-            email: "guest@supplylens.ai",
-            name: "Guest",
-            role: "Lead Sourcing Director",
-            onboarding_status: "completed",
-            active_step: 6,
-          })
-        );
-      }
+      authService.setStoredUser({
+        id: "usr-guest",
+        email: "guest@supplylens.ai",
+        name: "Guest",
+        role: "Lead Sourcing Director",
+        onboarding_status: "completed",
+        active_step: 6,
+      });
       if (onSuccess) {
         onSuccess(demoUser);
       }

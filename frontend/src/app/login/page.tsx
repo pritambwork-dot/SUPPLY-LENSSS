@@ -57,9 +57,10 @@ function LoginForm() {
       });
 
       if (res.user.onboarding_status === "completed") {
-        router.push(redirectTarget !== "/dashboard" ? redirectTarget : "/dashboard");
+        const dest = redirectTarget && redirectTarget !== "/dashboard" ? redirectTarget : "/dashboard";
+        window.location.href = dest;
       } else {
-        router.push("/onboarding");
+        window.location.href = "/onboarding";
       }
     } catch (err: any) {
       setError(err?.message || "Invalid credentials. Please try again.");
@@ -71,7 +72,6 @@ function LoginForm() {
   const handleQuickDemoAccess = (completed: boolean) => {
     setIsLoading(true);
     setTimeout(() => {
-      setIsLoading(false);
       const demoUser = {
         name: completed ? "Pritam Biswas" : "New Founder",
         email: completed ? "pritam@supplylens.ai" : "newfounder@supplylens.ai",
@@ -82,10 +82,12 @@ function LoginForm() {
         email: demoUser.email,
         password: "demoPassword123",
       }).then((res) => {
+        setIsLoading(false);
         if (completed) {
-          router.push(redirectTarget !== "/dashboard" ? redirectTarget : "/dashboard");
+          const dest = redirectTarget && redirectTarget !== "/dashboard" ? redirectTarget : "/dashboard";
+          window.location.href = dest;
         } else {
-          router.push("/onboarding");
+          window.location.href = "/onboarding";
         }
       });
     }, 400);

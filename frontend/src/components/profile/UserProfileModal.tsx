@@ -60,7 +60,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         onSignOut();
       }
       onClose();
-      router.push("/login");
+      window.location.href = "/login";
     } catch {
       setIsSigningOut(false);
     }

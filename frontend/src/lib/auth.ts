@@ -11,6 +11,7 @@ export interface AuthUser {
 }
 
 const STORAGE_KEY = "supplylens_auth_user";
+export const AUTH_COOKIE_NAME = "supplylens_auth";
 
 export const authService = {
   getStoredUser(): AuthUser | null {
@@ -18,24 +19,46 @@ export const authService = {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.id) return null;
+
+      // Ensure browser cookie matches localStorage state for middleware
+      if (typeof document !== "undefined" && !document.cookie.includes(`${AUTH_COOKIE_NAME}=`)) {
+        document.cookie = `${AUTH_COOKIE_NAME}=${encodeURIComponent(parsed.id)}; path=/; max-age=604800; SameSite=Lax`;
+      }
+
+      return parsed;
     } catch {
       return null;
     }
   },
 
+  isAuthenticated(): boolean {
+    const user = this.getStoredUser();
+    return !!(user && user.id);
+  },
+
   setStoredUser(user: AuthUser | null) {
     if (typeof window === "undefined") return;
-    if (user) {
+    if (user && user.id) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       // Also keep legacy supplylens_user key for backward compatibility
       localStorage.setItem(
         "supplylens_user",
-        JSON.stringify({ name: user.name, email: user.email, role: user.role })
+        JSON.stringify({ name: user.name, email: user.email, role: user.role, id: user.id })
       );
+      // Synchronize cookie for Next.js middleware protection
+      if (typeof document !== "undefined") {
+        document.cookie = `${AUTH_COOKIE_NAME}=${encodeURIComponent(user.id)}; path=/; max-age=604800; SameSite=Lax`;
+      }
     } else {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem("supplylens_user");
+      localStorage.removeItem("supplylens_demo_onboarding_profile");
+      // Clear cookie immediately
+      if (typeof document !== "undefined") {
+        document.cookie = `${AUTH_COOKIE_NAME}=; path=/; max-age=0; SameSite=Lax`;
+      }
     }
   },
 

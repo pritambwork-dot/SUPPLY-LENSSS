@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { authService, AuthUser } from "@/lib/auth";
 import { api } from "@/services/api";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 const STEPS = [
   { id: 1, title: "Personal Details", subtitle: "Let's get to know you" },
@@ -102,7 +103,7 @@ export default function OnboardingPage() {
   // Load session & restore onboarding progress
   useEffect(() => {
     authService.getSessionUser().then((user) => {
-      if (user) {
+      if (user && user.id) {
         setCurrentUser(user);
         setFullName(user.name || "");
         setEmail(user.email || "");
@@ -154,12 +155,10 @@ export default function OnboardingPage() {
           }
         }).catch(() => {});
       } else {
-        // Fallback demo user
-        setFullName("Pritam Biswas");
-        setEmail("pritam@supplylens.ai");
+        router.replace("/login?redirect=/onboarding");
       }
     });
-  }, []);
+  }, [router]);
 
   const saveCurrentStepProgress = async (stepNum: number) => {
     setIsSaving(true);
@@ -439,7 +438,8 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] text-slate-800 antialiased flex flex-col selection:bg-blue-600/20">
+    <AuthGuard>
+      <div className="min-h-screen bg-[#F7F9FC] text-slate-800 antialiased flex flex-col selection:bg-blue-600/20">
       {/* Top Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -1362,5 +1362,6 @@ export default function OnboardingPage() {
         </div>
       </div>
     </div>
+    </AuthGuard>
   );
 }

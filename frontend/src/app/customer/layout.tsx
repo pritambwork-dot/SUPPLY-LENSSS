@@ -30,6 +30,7 @@ import { AIAssistantDrawer } from "@/components/assistant/AIAssistantDrawer";
 import { UserProfileModal } from "@/components/profile/UserProfileModal";
 import { LiveDateTime } from "@/components/common/LiveDateTime";
 import { AnimatedGlassBackground } from "@/components/common/AnimatedGlassBackground";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 import { authService, AuthUser } from "@/lib/auth";
 import { initialBusinessProfile, verifiedSuppliers } from "@/data/mockData";
 import { BusinessProfile, Supplier } from "@/types";
@@ -53,20 +54,13 @@ export default function CustomerPortalLayout({
 
   useEffect(() => {
     authService.getSessionUser().then((user) => {
-      if (user) {
+      if (user && user.id) {
         setCurrentUser(user);
       } else {
-        setCurrentUser({
-          id: "usr-demo-001",
-          email: "hossein@supplylens.ai",
-          name: "Hossein",
-          role: "Lead Sourcing Director",
-          onboarding_status: "completed",
-          active_step: 6,
-        });
+        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
       }
     });
-  }, []);
+  }, [pathname, router]);
 
   // Determine active rail key based on route
   const getActiveRailKey = () => {
@@ -162,8 +156,9 @@ export default function CustomerPortalLayout({
       };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
-      {/* Sleek Left Navigation Rail (Identical to Dashboard) */}
+    <AuthGuard>
+      <div className="flex h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 antialiased font-sans">
+        {/* Sleek Left Navigation Rail (Identical to Dashboard) */}
       <LeftNavRail
         activeTab={getActiveRailKey()}
         onTabChange={handleTabChange}
@@ -392,5 +387,6 @@ export default function CustomerPortalLayout({
         }}
       />
     </div>
+    </AuthGuard>
   );
 }

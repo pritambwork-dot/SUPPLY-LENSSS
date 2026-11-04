@@ -60,15 +60,14 @@ import {
 } from "@/data/mockData";
 import { api } from "@/services/api";
 
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { authService } from "@/lib/auth";
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<string>("landing");
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<{ name: string; handle: string; role: string } | null>({
-    name: "Hossein",
-    handle: "@user680523",
-    role: "Lead Sourcing Director",
-  });
+  const [currentUser, setCurrentUser] = useState<{ name: string; handle: string; role: string } | null>(null);
 
   // Core business & sourcing states
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(initialBusinessProfile);
@@ -110,17 +109,14 @@ export default function Home() {
 
   // Check local storage for user profile & URL tab query
   useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem("supplylens_user");
-      if (savedUser) {
-        const u = JSON.parse(savedUser);
-        setCurrentUser({
-          name: u.name || "Hossein",
-          handle: u.handle || (u.name ? `@${u.name.toLowerCase().replace(/\s+/g, "")}` : "@user680523"),
-          role: u.role || "Lead Sourcing Director",
-        });
-      }
-    } catch {}
+    const user = authService.getStoredUser();
+    if (user && user.id) {
+      setCurrentUser({
+        name: user.name || "Sourcing Director",
+        handle: `@${(user.name || "user").toLowerCase().replace(/\s+/g, "")}`,
+        role: user.role || "Lead Sourcing Director",
+      });
+    }
 
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -128,6 +124,10 @@ export default function Home() {
       if (tabParam) {
         if (tabParam === "dashboard" || tabParam === "home") {
           window.location.replace("/dashboard");
+          return;
+        }
+        if (tabParam !== "landing" && (!user || !user.id)) {
+          window.location.replace(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`);
           return;
         }
         setActiveTab(tabParam);
@@ -608,7 +608,8 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex antialiased overflow-x-hidden bg-[#F4F6F9] text-slate-800">
+    <AuthGuard>
+      <div className="min-h-screen flex antialiased overflow-x-hidden bg-[#F4F6F9] text-slate-800">
       {/* Desktop Left Navigation Rail */}
       <LeftNavRail
         activeTab={
@@ -1084,5 +1085,6 @@ export default function Home() {
       )}
       </div>
     </div>
+    </AuthGuard>
   );
 }

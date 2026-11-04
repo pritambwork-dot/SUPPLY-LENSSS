@@ -96,7 +96,7 @@ export default function VendorDirectoryPage() {
     loadSuppliers();
   }, [verifiedOnly, sortBy]);
 
-  // Load saved suppliers
+  // Load saved suppliers and comparison state
   useEffect(() => {
     async function loadSaved() {
       try {
@@ -107,6 +107,16 @@ export default function VendorDirectoryPage() {
       } catch {}
     }
     loadSaved();
+
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("supplylens_compared_supplier_ids");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) setComparedSupplierIds(parsed);
+        }
+      } catch {}
+    }
   }, []);
 
   const handleToggleSave = async (supplier: Supplier, e: React.MouseEvent) => {
@@ -134,15 +144,18 @@ export default function VendorDirectoryPage() {
 
   const handleToggleCompare = (supplier: Supplier, e: React.MouseEvent) => {
     e.stopPropagation();
+    let updated: string[];
     if (comparedSupplierIds.includes(supplier.id)) {
-      setComparedSupplierIds((prev) => prev.filter((id) => id !== supplier.id));
+      updated = comparedSupplierIds.filter((id) => id !== supplier.id);
+      setComparedSupplierIds(updated);
       showToast(`Removed ${supplier.name} from comparison`);
     } else {
       if (comparedSupplierIds.length >= 5) {
         showToast("Maximum 5 suppliers can be compared simultaneously");
         return;
       }
-      setComparedSupplierIds((prev) => [...prev, supplier.id]);
+      updated = [...comparedSupplierIds, supplier.id];
+      setComparedSupplierIds(updated);
       showToast(`Added ${supplier.name} to comparison matrix`);
       api.customer.logActivity({
         activity_type: "compare",
@@ -151,6 +164,12 @@ export default function VendorDirectoryPage() {
         entity_type: "supplier",
         entity_id: supplier.id,
       });
+    }
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("supplylens_compared_supplier_ids", JSON.stringify(updated));
+      } catch {}
     }
   };
 
@@ -732,6 +751,41 @@ export default function VendorDirectoryPage() {
           handleTabChange(tab);
         }}
       />
+
+        {/* Floating Comparison Dock */}
+        {comparedSupplierIds.length > 0 && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 text-white backdrop-blur-xl border border-slate-700 shadow-2xl rounded-2xl px-5 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-5">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-blue-600/30 text-blue-400 border border-blue-500/30">
+                <GitCompare className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold">
+                <strong>{comparedSupplierIds.length}</strong> / 5 Vendors in Comparison Matrix
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setComparedSupplierIds([]);
+                  if (typeof window !== "undefined") {
+                    localStorage.removeItem("supplylens_compared_supplier_ids");
+                  }
+                  showToast("Cleared comparison matrix");
+                }}
+                className="text-[11px] text-slate-400 hover:text-white transition-colors px-2 py-1 cursor-pointer"
+              >
+                Clear
+              </button>
+              <button
+                onClick={() => router.push("/customer/comparisons")}
+                className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+              >
+                <span>Open Matrix</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Toast Notification */}
         <AnimatePresence>

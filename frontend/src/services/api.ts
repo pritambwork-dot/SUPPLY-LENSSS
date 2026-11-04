@@ -148,13 +148,51 @@ function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
     } as any;
   }
   if (path.includes('/api/suppliers/compare')) {
+    let reqIds: string[] = [];
+    try {
+      if (options?.body) {
+        const parsed = JSON.parse(options.body as string);
+        reqIds = parsed.supplier_ids || parsed.supplierIds || [];
+      }
+    } catch {}
+
+    const selected = verifiedSuppliers.filter(s => reqIds.includes(s.id));
+    const candidates = selected.length > 0 ? selected : verifiedSuppliers.slice(0, 3);
+
     return {
-      comparison_matrix: verifiedSuppliers.slice(0, 3).map(s => ({
+      compared_count: candidates.length,
+      suppliers: candidates.map(s => {
+        const p0 = s.products?.[0];
+        return {
+          ...s,
+          verification_status: s.verificationStatus || "Demo Verified",
+          verification_score: s.verificationScore || 98,
+          match_score: s.matchScore || 95,
+          match_reason: `Verified ${s.supplierType || "OEM"} with audited manufacturing facility in ${s.city}, ${s.country}.`,
+          products: s.products && s.products.length > 0 ? s.products : [
+            {
+              id: `prod-${s.id}-1`,
+              name: "Standard Catalog Product",
+              quotedPrice: 0.12,
+              quoted_price: 0.12,
+              currency: "USD",
+              moq: 1000,
+              unit: "pcs",
+            }
+          ],
+        };
+      }),
+      ai_summary: [
+        `**${candidates[0]?.name || "Utkal GreenFiber Pvt Ltd"}** provides the highest audit score and lowest starting MOQ, ideal for rapid deployment.`,
+        `**${candidates[1]?.name || "Shree Jagannath Packaging"}** offers competitive pricing with verified ISO and FSC regulatory certifications.`,
+        candidates[2] ? `**${candidates[2].name}** demonstrates scalable production capacity and fast export turnaround times.` : "Side-by-side evaluation confirms compliance readiness across all dimensions."
+      ],
+      comparison_matrix: candidates.map(s => ({
         supplier: s,
         landed_cost: (s as any).pricePerUnit || s.products?.[0]?.quotedPrice || 0.08,
         moq: (s as any).moq || s.products?.[0]?.moq || 1000,
         lead_time_days: (s as any).leadTimeDays || (s as any).lead_time_days || 14,
-        verification_score: s.verificationScore,
+        verification_score: s.verificationScore || 98,
         esg_score: 94
       }))
     } as any;

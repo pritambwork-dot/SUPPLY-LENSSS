@@ -299,7 +299,15 @@ export default function VerificationDeskPage() {
         <SupplierProfileModal
           supplier={selectedSupplierForModal}
           onClose={() => setSelectedSupplierForModal(null)}
-          onToggleCompare={() => {
+          onToggleCompare={(sup) => {
+            try {
+              const stored = localStorage.getItem("supplylens_compared_supplier_ids");
+              let list: string[] = stored ? JSON.parse(stored) : [];
+              if (!list.includes(sup.id)) {
+                list = [...list, sup.id].slice(0, 5);
+                localStorage.setItem("supplylens_compared_supplier_ids", JSON.stringify(list));
+              }
+            } catch {}
             setSelectedSupplierForModal(null);
             router.push("/customer/comparisons");
           }}

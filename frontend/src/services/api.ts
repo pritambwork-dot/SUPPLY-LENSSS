@@ -433,6 +433,105 @@ function getDemoFallbackResponse<T>(path: string, options?: RequestInit): T {
       confidence: 0.96,
     } as any;
   }
+  if (path.includes('/api/verification/dashboard')) {
+    const total = verifiedSuppliers.length;
+    const evaluated_suppliers = verifiedSuppliers.map((s) => ({
+      id: s.id,
+      name: s.name,
+      country: s.country || "India",
+      city: s.city || "",
+      status: s.verificationStatus || "Demo verified",
+      status_key: (s.verificationStatus || "verified").toLowerCase().replace(/\s+/g, "_"),
+      badge_text: s.demoBadge || s.verificationBadge || "DEMO VERIFIED · SIMULATED EVIDENCE",
+      score: s.verificationScore || 95,
+      confidence: s.dataConfidence || 95,
+      passed_dimensions: 10,
+      total_dimensions: 10,
+      last_verified: s.verificationDate || "2026-10-28",
+    }));
+
+    return {
+      summary: {
+        total_suppliers: total,
+        verified_count: total,
+        partially_verified_count: 0,
+        requires_review_count: 0,
+        failed_count: 0,
+        unverified_count: 0,
+        average_score: 95.8,
+        compliance_pass_rate: "100.0%",
+        environment: "DEMO ENVIRONMENT · SAMPLE DATA",
+        policy: "Isolated Simulated Verification Fixtures",
+      },
+      dimensions: [
+        { id: "D1", name: "Corporate Identity & Registration", max_score: 15, weight: 0.15 },
+        { id: "D2", name: "Website & Domain Authenticity", max_score: 10, weight: 0.10 },
+        { id: "D3", name: "Product & Manufacturing Relevance", max_score: 15, weight: 0.15 },
+        { id: "D4", name: "Manufacturing Facility & Plant", max_score: 15, weight: 0.15 },
+        { id: "D5", name: "Physical Business Location & Jurisdiction", max_score: 10, weight: 0.10 },
+        { id: "D6", name: "Direct Verified Contactability", max_score: 10, weight: 0.10 },
+        { id: "D7", name: "Quality & Regulatory Certifications", max_score: 10, weight: 0.10 },
+        { id: "D8", name: "Multi-Source Registry Corroboration", max_score: 5, weight: 0.05 },
+        { id: "D9", name: "Compliance & Sanctions Screening", max_score: 5, weight: 0.05 },
+        { id: "D10", name: "Audit Recency & Freshness", max_score: 5, weight: 0.05 },
+      ],
+      suppliers: evaluated_suppliers,
+      recent_audit_logs: [
+        {
+          id: "log-001",
+          supplier_id: "sup-utk-001",
+          supplier_name: "Utkal GreenFiber Pvt Ltd",
+          action: "AUTOMATED_VERIFY_PASS",
+          previous_status: "Demo partially verified",
+          new_status: "Demo verified",
+          auditor: "System (Deterministic 10-D Engine)",
+          timestamp: "2026-11-04T10:15:00Z",
+          notes: "All 10 dimensions evaluated. Machine and GIS geo-coordinates verified.",
+        },
+        {
+          id: "log-002",
+          supplier_id: "sup-ply-006",
+          supplier_name: "Kalinga EcoPly & Timber Works",
+          action: "MANUAL_AUDIT_APPROVED",
+          previous_status: "Demo requires review",
+          new_status: "Demo verified",
+          auditor: "Auditor S. Kulkarni (Admin Desk)",
+          timestamp: "2026-11-04T11:42:00Z",
+          notes: "Verified third-party FSC certification certificate ref FSC-C104523.",
+        },
+      ],
+    } as any;
+  }
+  if (path.includes('/api/verification/evidence')) {
+    const sId = path.split('/api/verification/evidence/')[1]?.split('?')[0];
+    const s = verifiedSuppliers.find(x => x.id === sId) || verifiedSuppliers[0];
+    return {
+      supplier_id: s.id,
+      supplier_name: s.name,
+      country: s.country,
+      verification_status: s.verificationStatus || "Demo verified",
+      badge_text: s.demoBadge || "DEMO VERIFIED · SIMULATED EVIDENCE",
+      score: s.verificationScore || 95,
+      confidence: 95,
+      checks: [
+        { name: "Corporate Registry (MCA/CIN/GSTIN)", passed: true, score: 15, details: "Verified active registration" },
+        { name: "Domain & SSL Authentication", passed: true, score: 10, details: "Valid SSL & domain age > 3 yrs" },
+        { name: "Factory Floor Inspection", passed: true, score: 15, details: "GIS tagged geolocation matched" },
+        { name: "Quality Certifications (ISO 9001/FSC)", passed: true, score: 10, details: "Verified active certificates" },
+      ],
+      evidence_dossier: {
+        registration_number: "CIN-U21098OR2018PTC029415",
+        gstin: "21AABCU9603R1ZM",
+        coordinates: `${s.lat || 20.29}, ${s.lng || 85.82}`,
+        audit_date: s.verificationDate || "2026-10-28",
+      },
+      simulated_fixtures: {
+        auditor: "Deterministic 10-D Compliance Engine",
+        status: "Passed all dimensions",
+      },
+      history: [],
+    } as any;
+  }
   return { success: true, demo: true } as any;
 }
 
